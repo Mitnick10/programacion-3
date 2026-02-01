@@ -10,10 +10,10 @@ const PORT = 3000;
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname)));
+app.use(express.static(path.join(__dirname, '../public')));
 
 // Conexión a la base de datos SQLite
-const db = new sqlite3.Database('./futbolstore.db', (err) => {
+const db = new sqlite3.Database(path.join(__dirname, 'database/futbolstore.db'), (err) => {
     if (err) {
         console.error('❌ Error al conectar a la base de datos:', err.message);
     } else {
@@ -47,7 +47,7 @@ function initDatabase() {
 // Crear usuario admin automáticamente si no existe
 function createAdminUser() {
     const adminEmail = 'admin@futbolstore.com';
-    
+
     db.get('SELECT * FROM users WHERE email = ?', [adminEmail], async (err, row) => {
         if (err) {
             console.error('❌ Error al verificar admin:', err.message);
@@ -56,7 +56,7 @@ function createAdminUser() {
 
         if (!row) {
             const hashedPassword = await bcrypt.hash('admin123', 10);
-            
+
             db.run(
                 'INSERT INTO users (nombre, email, password, role) VALUES (?, ?, ?, ?)',
                 ['Administrador', adminEmail, hashedPassword, 'admin'],
@@ -85,8 +85,8 @@ app.post('/api/register', async (req, res) => {
 
         // Validación de datos
         if (!nombre || !email || !password) {
-            return res.status(400).json({ 
-                error: 'Todos los campos son obligatorios' 
+            return res.status(400).json({
+                error: 'Todos los campos son obligatorios'
             });
         }
 
@@ -98,8 +98,8 @@ app.post('/api/register', async (req, res) => {
             }
 
             if (row) {
-                return res.status(409).json({ 
-                    error: 'El email ya está registrado' 
+                return res.status(409).json({
+                    error: 'El email ya está registrado'
                 });
             }
 
@@ -108,18 +108,18 @@ app.post('/api/register', async (req, res) => {
 
             // Insertar usuario (siempre con rol 'client')
             const role = 'client';
-            
+
             db.run(
                 'INSERT INTO users (nombre, email, password, role) VALUES (?, ?, ?, ?)',
                 [nombre, email, hashedPassword, role],
-                function(err) {
+                function (err) {
                     if (err) {
                         console.error('Error al insertar:', err);
                         return res.status(500).json({ error: 'Error al crear usuario' });
                     }
 
                     console.log(`✅ Usuario registrado: ${email} (ID: ${this.lastID})`);
-                    
+
                     res.status(201).json({
                         message: 'Usuario registrado exitosamente',
                         user: {
@@ -146,8 +146,8 @@ app.post('/api/login', async (req, res) => {
 
         // Validación
         if (!email || !password) {
-            return res.status(400).json({ 
-                error: 'Email y contraseña son obligatorios' 
+            return res.status(400).json({
+                error: 'Email y contraseña son obligatorios'
             });
         }
 
@@ -159,8 +159,8 @@ app.post('/api/login', async (req, res) => {
             }
 
             if (!user) {
-                return res.status(401).json({ 
-                    error: 'Credenciales inválidas' 
+                return res.status(401).json({
+                    error: 'Credenciales inválidas'
                 });
             }
 
@@ -168,8 +168,8 @@ app.post('/api/login', async (req, res) => {
             const passwordMatch = await bcrypt.compare(password, user.password);
 
             if (!passwordMatch) {
-                return res.status(401).json({ 
-                    error: 'Credenciales inválidas' 
+                return res.status(401).json({
+                    error: 'Credenciales inválidas'
                 });
             }
 

@@ -2,7 +2,9 @@ const sqlite3 = require('sqlite3').verbose();
 const bcrypt = require('bcrypt');
 
 // Conectar a la base de datos
-const db = new sqlite3.Database('./futbolstore.db', (err) => {
+const path = require('path');
+const dbPath = path.join(__dirname, '../database/futbolstore.db');
+const db = new sqlite3.Database(dbPath, (err) => {
     if (err) {
         console.error('❌ Error al conectar a la base de datos:', err.message);
         process.exit(1);
