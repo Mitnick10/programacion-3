@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - FútbolStore</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'sport-blue': '#0f172a',
+                        'sport-accent': '#f97316',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-slate-100 min-h-screen flex">
+
+    <!-- Sidebar -->
+    <aside class="w-64 bg-sport-blue text-white hidden md:flex flex-col">
+        <div class="p-6 border-b border-slate-700">
+            <h1 class="text-2xl font-bold">
+                FÚTBOL<span class="text-sport-accent">ADMIN</span>
+            </h1>
+        </div>
+        <nav class="flex-1 p-4 space-y-2">
+            <a href="#" class="block py-3 px-4 rounded hover:bg-slate-800 bg-slate-800 text-sport-accent font-semibold">
+                📊 Dashboard
+            </a>
+            <a href="#" class="block py-3 px-4 rounded hover:bg-slate-800 transition">
+                👥 Usuarios
+            </a>
+            <a href="#" class="block py-3 px-4 rounded hover:bg-slate-800 transition">
+                📦 Productos
+            </a>
+            <a href="#" class="block py-3 px-4 rounded hover:bg-slate-800 transition">
+                💰 Ventas
+            </a>
+        </nav>
+        <div class="p-4 border-t border-slate-700">
+            <button id="logout-btn-sidebar"
+                class="w-full flex items-center justify-center gap-2 py-2 px-4 rounded bg-red-600 hover:bg-red-700 transition">
+                <span>Cerrar Sesión</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col">
+        <!-- Mobile Header -->
+        <header class="bg-white shadow-sm p-4 flex justify-between items-center md:hidden">
+            <h1 class="text-xl font-bold text-sport-blue">FÚTBOL<span class="text-sport-accent">ADMIN</span></h1>
+            <button id="mobile-menu-btn" class="text-slate-600">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16">
+                    </path>
+                </svg>
+            </button>
+        </header>
+
+        <!-- Dashboard Content -->
+        <main class="flex-1 p-6 md:p-8 overflow-y-auto">
+            <div class="flex justify-between items-center mb-8">
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-800">Panel de Control</h2>
+                    <p class="text-slate-500">Bienvenido de nuevo, <span id="admin-name"
+                            class="font-semibold text-sport-blue">Admin</span></p>
+                </div>
+                <div class="hidden md:block">
+                    <span
+                        class="bg-sport-accent/10 text-sport-accent px-3 py-1 rounded-full text-sm font-semibold border border-sport-accent/20">
+                        Admin Access
+                    </span>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                    <div class="text-slate-500 text-sm mb-1">Ventas Totales</div>
+                    <div class="text-2xl font-bold text-slate-800">$24,500</div>
+                    <div class="text-green-500 text-xs font-semibold mt-2">↑ 12% vs mes anterior</div>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                    <div class="text-slate-500 text-sm mb-1">Usuarios</div>
+                    <div class="text-2xl font-bold text-slate-800">1,234</div>
+                    <div class="text-green-500 text-xs font-semibold mt-2">↑ 5% nuevos usuarios</div>
+                </div>
+                <!-- More cards can go here -->
+            </div>
+
+            <!-- Recent Users Table Section -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+                <div class="p-6 border-b border-slate-100 flex justify-between items-center">
+                    <h3 class="font-bold text-slate-800">Usuarios Registrados (Desde API)</h3>
+                    <button onclick="loadUsers()" class="text-sm text-sport-accent hover:underline">Recargar</button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm text-slate-600">
+                        <thead class="bg-slate-50 text-slate-800 uppercase font-semibold">
+                            <tr>
+                                <th class="px-6 py-4">ID</th>
+                                <th class="px-6 py-4">Nombre</th>
+                                <th class="px-6 py-4">Email</th>
+                                <th class="px-6 py-4">Rol</th>
+                                <th class="px-6 py-4">Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-table-body" class="divide-y divide-slate-100">
+                            <!-- Dynamic Content -->
+                            <tr>
+                                <td colspan="5" class="px-6 py-4 text-center">Cargando usuarios...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:3000/api';
+
+        // Check Auth
+        document.addEventListener('DOMContentLoaded', () => {
+            const userStr = localStorage.getItem('user');
+
+            if (!userStr) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const user = JSON.parse(userStr);
+            if (user.role !== 'admin') {
+                alert('⛔ Acceso denegado: Se requieren permisos de administrador');
+                window.location.href = 'index.html';
+                return;
+            }
+
+            document.getElementById('admin-name').textContent = user.nombre;
+
+            // Load users list
+            loadUsers();
+
+            // Logout Handler
+            document.getElementById('logout-btn-sidebar').addEventListener('click', () => {
+                localStorage.removeItem('user');
+                window.location.href = 'login.html';
+            });
+        });
+
+        async function loadUsers() {
+            try {
+                const response = await fetch(`${API_URL}/users`);
+                const data = await response.json();
+
+                const tbody = document.getElementById('users-table-body');
+                tbody.innerHTML = '';
+
+                data.users.forEach(u => {
+                    const row = document.createElement('tr');
+                    const roleBadge = u.role === 'admin'
+                        ? '<span class="px-2 py-1 text-xs font-bold bg-sport-blue text-white rounded">ADMIN</span>'
+                        : '<span class="px-2 py-1 text-xs font-bold bg-slate-200 text-slate-600 rounded">CLIENT</span>';
+
+                    row.innerHTML = `
+                        <td class="px-6 py-4 font-mono text-xs">#${u.id}</td>
+                        <td class="px-6 py-4 font-medium text-slate-800">${u.nombre}</td>
+                        <td class="px-6 py-4">${u.email}</td>
+                        <td class="px-6 py-4">${roleBadge}</td>
+                        <td class="px-6 py-4">
+                            <span class="w-2 h-2 rounded-full bg-green-500 inline-block mr-1"></span> Activo
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error cargando usuarios:', error);
+                document.getElementById('users-table-body').innerHTML = `
+                    <tr><td colspan="5" class="px-6 py-4 text-center text-red-500">Error al cargar datos</td></tr>
+                `;
+            }
+        }
+    </script>
+</body>
+
+</html>

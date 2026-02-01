@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda - FútbolStore</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'sport-blue': '#0f172a',
+                        'sport-accent': '#f97316',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-slate-100 min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="bg-sport-blue shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <div class="flex-shrink-0">
+                    <h1 class="text-2xl font-bold text-white">
+                        FÚTBOL<span class="text-sport-accent">STORE</span>
+                    </h1>
+                </div>
+
+                <!-- User Menu -->
+                <div class="flex items-center gap-4">
+                    <span id="user-name" class="text-slate-300 text-sm hidden md:block">Invitado</span>
+                    <button id="logout-btn"
+                        class="bg-sport-accent hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-bold transition">
+                        Cerrar Sesión
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <!-- Welcome Banner -->
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden mb-8">
+            <div
+                class="p-8 md:p-12 text-center md:text-left flex flex-col md:flex-row items-center justify-between bg-gradient-to-r from-slate-800 to-sport-blue">
+                <div>
+                    <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
+                        ¡Bienvenido a <span class="text-sport-accent">FútbolStore!</span>
+                    </h2>
+                    <p class="text-slate-300 text-lg mb-6">Encuentra las mejores camisetas y equipamiento para tu
+                        equipo.</p>
+                    <button
+                        class="bg-white text-sport-blue font-bold py-3 px-8 rounded-full hover:bg-gray-100 transition shadow-lg">
+                        Ver Catálogo
+                    </button>
+                </div>
+                <div class="mt-8 md:mt-0 opacity-80">
+                    <svg class="h-32 w-32 text-sport-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Products Grid (Placeholder) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Product Card 1 -->
+            <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition duration-300">
+                <div class="h-48 bg-gray-200 flex items-center justify-center">
+                    <span class="text-gray-400">Imagen Producto</span>
+                </div>
+                <div class="p-6">
+                    <span class="text-xs font-bold text-sport-accent uppercase tracking-wider">Camisetas</span>
+                    <h3 class="mt-1 text-xl font-semibold text-slate-800">Camiseta Local 2024</h3>
+                    <p class="mt-2 text-slate-600 text-sm">Diseño aerodinámico con tecnología de transpiración avanzada.
+                    </p>
+                    <div class="mt-4 flex items-center justify-between">
+                        <span class="text-2xl font-bold text-slate-900">$89.99</span>
+                        <button class="text-sport-accent font-semibold hover:text-orange-700">Añadir +</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product Card 2 -->
+            <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition duration-300">
+                <div class="h-48 bg-gray-200 flex items-center justify-center">
+                    <span class="text-gray-400">Imagen Producto</span>
+                </div>
+                <div class="p-6">
+                    <span class="text-xs font-bold text-sport-accent uppercase tracking-wider">Botines</span>
+                    <h3 class="mt-1 text-xl font-semibold text-slate-800">Speed Pro X</h3>
+                    <p class="mt-2 text-slate-600 text-sm">Máxima velocidad y tracción en campo firme.</p>
+                    <div class="mt-4 flex items-center justify-between">
+                        <span class="text-2xl font-bold text-slate-900">$129.99</span>
+                        <button class="text-sport-accent font-semibold hover:text-orange-700">Añadir +</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product Card 3 -->
+            <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition duration-300">
+                <div class="h-48 bg-gray-200 flex items-center justify-center">
+                    <span class="text-gray-400">Imagen Producto</span>
+                </div>
+                <div class="p-6">
+                    <span class="text-xs font-bold text-sport-accent uppercase tracking-wider">Accesorios</span>
+                    <h3 class="mt-1 text-xl font-semibold text-slate-800">Balón Oficial</h3>
+                    <p class="mt-2 text-slate-600 text-sm">Balón profesional aprobado por la liga.</p>
+                    <div class="mt-4 flex items-center justify-between">
+                        <span class="text-2xl font-bold text-slate-900">$39.99</span>
+                        <button class="text-sport-accent font-semibold hover:text-orange-700">Añadir +</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Verificar sesión al cargar
+        document.addEventListener('DOMContentLoaded', () => {
+            const userStr = localStorage.getItem('user');
+
+            if (!userStr) {
+                // Si no hay sesión, redirigir a login
+                // window.location.href = 'login.html'; 
+                // Dejamos que los invitados vean la página por ahora, pero cambiamos el botón
+                document.getElementById('logout-btn').textContent = 'Iniciar Sesión';
+                document.getElementById('logout-btn').onclick = () => window.location.href = 'login.html';
+                return;
+            }
+
+            const user = JSON.parse(userStr);
+            document.getElementById('user-name').textContent = `Hola, ${user.nombre}`;
+
+            // Logout
+            document.getElementById('logout-btn').addEventListener('click', () => {
+                localStorage.removeItem('user');
+                window.location.href = 'login.html';
+            });
+        });
+    </script>
+</body>
+
+</html>
