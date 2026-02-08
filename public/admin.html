@@ -345,7 +345,7 @@
             if (imageFile) {
                 formData.append('imagen', imageFile);
             } else if (imageUrl) {
-                formData.append('imagen_url', imageUrl);
+                formData.append('urlImagen', imageUrl);
             }
 
             try {
@@ -359,7 +359,8 @@
                     document.getElementById('add-product-form').reset();
                     loadProducts();
                 } else {
-                    alert('❌ Error al crear producto');
+                    const errorData = await res.json();
+                    alert(`❌ Error al crear producto: ${errorData.error || 'Desconocido'}`);
                 }
             } catch (error) {
                 console.error(error);

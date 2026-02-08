@@ -8,7 +8,11 @@ const getAllProducts = (req, res) => {
         LEFT JOIN brands b ON p.marca_id = b.id
     `;
     db.all(query, [], (err, rows) => {
-        if (err) return res.status(500).json({ error: err.message });
+        if (err) {
+            console.error("❌ Error querying products:", err.message);
+            return res.status(500).json({ error: err.message });
+        }
+        console.log(`✅ Fetched ${rows.length} products`);
         const products = rows.map(p => ({
             ...p,
             categorias: { nombre: p.categoria_nombre, icono: p.categoria_icono },
@@ -34,7 +38,7 @@ const getBrands = (req, res) => {
 
 const createProduct = (req, res) => {
     const { nombre, precio, categoria_id, marca_id } = req.body;
-    const imagen_url = req.file ? `/uploads/${req.file.filename}` : (req.body.imagen_url || null);
+    const imagen_url = req.file ? `/uploads/${req.file.filename}` : (req.body.urlImagen || null);
 
     if (!nombre || !precio) {
         return res.status(400).json({ error: 'Nombre y precio son obligatorios' });
