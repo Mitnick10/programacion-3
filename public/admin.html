@@ -30,18 +30,24 @@
             </h1>
         </div>
         <nav class="flex-1 p-4 space-y-2">
-            <a href="#" class="block py-3 px-4 rounded hover:bg-slate-800 bg-slate-800 text-sport-accent font-semibold">
+            <button onclick="switchView('dashboard')" id="nav-dashboard"
+                class="w-full text-left py-3 px-4 rounded hover:bg-slate-800 bg-slate-800 text-sport-accent font-semibold transition">
                 📊 Dashboard
-            </a>
-            <a href="#" class="block py-3 px-4 rounded hover:bg-slate-800 transition">
+            </button>
+            <button onclick="switchView('users')" id="nav-users"
+                class="w-full text-left py-3 px-4 rounded hover:bg-slate-800 transition">
                 👥 Usuarios
-            </a>
-            <a href="#" class="block py-3 px-4 rounded hover:bg-slate-800 transition">
+            </button>
+            <button onclick="switchView('products')" id="nav-products"
+                class="w-full text-left py-3 px-4 rounded hover:bg-slate-800 transition">
                 📦 Productos
-            </a>
-            <a href="#" class="block py-3 px-4 rounded hover:bg-slate-800 transition">
-                💰 Ventas
-            </a>
+            </button>
+            <div class="pt-4 mt-4 border-t border-slate-700">
+                <a href="index.html"
+                    class="block py-3 px-4 rounded hover:bg-slate-800 transition text-slate-300 hover:text-white">
+                    🏠 Ver Tienda
+                </a>
+            </div>
         </nav>
         <div class="p-4 border-t border-slate-700">
             <button id="logout-btn-sidebar"
@@ -52,139 +58,340 @@
     </aside>
 
     <!-- Main Content -->
-    <div class="flex-1 flex flex-col">
-        <!-- Mobile Header -->
-        <header class="bg-white shadow-sm p-4 flex justify-between items-center md:hidden">
-            <h1 class="text-xl font-bold text-sport-blue">FÚTBOL<span class="text-sport-accent">ADMIN</span></h1>
-            <button id="mobile-menu-btn" class="text-slate-600">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16">
-                    </path>
-                </svg>
-            </button>
-        </header>
-
+    <div class="flex-1 flex flex-col h-screen overflow-hidden">
         <!-- Dashboard Content -->
         <main class="flex-1 p-6 md:p-8 overflow-y-auto">
             <div class="flex justify-between items-center mb-8">
                 <div>
-                    <h2 class="text-2xl font-bold text-slate-800">Panel de Control</h2>
+                    <h2 id="page-title" class="text-2xl font-bold text-slate-800">Panel de Control</h2>
                     <p class="text-slate-500">Bienvenido de nuevo, <span id="admin-name"
                             class="font-semibold text-sport-blue">Admin</span></p>
                 </div>
-                <div class="hidden md:block">
-                    <span
-                        class="bg-sport-accent/10 text-sport-accent px-3 py-1 rounded-full text-sm font-semibold border border-sport-accent/20">
-                        Admin Access
-                    </span>
+            </div>
+
+            <!-- VIEW: DASHBOARD (Resumen) -->
+            <div id="view-dashboard" class="view-section">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                        <div class="text-slate-500 text-sm mb-1">Ventas Totales</div>
+                        <div class="text-2xl font-bold text-slate-800" id="total-revenue">$0.00</div>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                        <div class="text-slate-500 text-sm mb-1">Total Pedidos</div>
+                        <div class="text-2xl font-bold text-slate-800" id="total-orders">0</div>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                        <div class="text-slate-500 text-sm mb-1">Ticket Promedio</div>
+                        <div class="text-2xl font-bold text-slate-800" id="avg-ticket">$0.00</div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden mb-8">
+                    <div class="p-6 border-b border-slate-100 flex justify-between items-center">
+                        <h3 class="font-bold text-slate-800">Órdenes Recientes</h3>
+                        <button onclick="loadDashboardStats()" class="text-sm text-sport-accent hover:underline">🔄
+                            Actualizar</button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm text-slate-600">
+                            <thead class="bg-slate-50 text-slate-800 uppercase font-semibold">
+                                <tr>
+                                    <th class="px-6 py-4">ID</th>
+                                    <th class="px-6 py-4">Cliente</th>
+                                    <th class="px-6 py-4">Fecha</th>
+                                    <th class="px-6 py-4">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recent-orders-table" class="divide-y divide-slate-100">
+                                <tr>
+                                    <td colspan="4" class="px-6 py-4 text-center">Cargando...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
-            <!-- Stats Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
-                    <div class="text-slate-500 text-sm mb-1">Ventas Totales</div>
-                    <div class="text-2xl font-bold text-slate-800">$24,500</div>
-                    <div class="text-green-500 text-xs font-semibold mt-2">↑ 12% vs mes anterior</div>
+            <!-- VIEW: USERS -->
+            <div id="view-users" class="view-section hidden">
+                <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+                    <div class="p-6 border-b border-slate-100 flex justify-between items-center">
+                        <h3 class="font-bold text-slate-800">Usuarios Registrados</h3>
+                        <button onclick="loadUsers()"
+                            class="text-sm text-sport-accent hover:underline">Recargar</button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm text-slate-600">
+                            <thead class="bg-slate-50 text-slate-800 uppercase font-semibold">
+                                <tr>
+                                    <th class="px-6 py-4">ID</th>
+                                    <th class="px-6 py-4">Nombre</th>
+                                    <th class="px-6 py-4">Email</th>
+                                    <th class="px-6 py-4">Rol</th>
+                                </tr>
+                            </thead>
+                            <tbody id="users-table-body" class="divide-y divide-slate-100">
+                                <tr>
+                                    <td colspan="4" class="px-6 py-4 text-center">Cargando...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
-                    <div class="text-slate-500 text-sm mb-1">Usuarios</div>
-                    <div class="text-2xl font-bold text-slate-800">1,234</div>
-                    <div class="text-green-500 text-xs font-semibold mt-2">↑ 5% nuevos usuarios</div>
-                </div>
-                <!-- More cards can go here -->
             </div>
 
-            <!-- Recent Users Table Section -->
-            <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-                <div class="p-6 border-b border-slate-100 flex justify-between items-center">
-                    <h3 class="font-bold text-slate-800">Usuarios Registrados (Desde API)</h3>
-                    <button onclick="loadUsers()" class="text-sm text-sport-accent hover:underline">Recargar</button>
+            <!-- VIEW: PRODUCTS -->
+            <div id="view-products" class="view-section hidden">
+                <!-- Add Product Form -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-8">
+                    <h3 class="font-bold text-slate-800 mb-4">✨ Agregar Nuevo Producto</h3>
+                    <form id="add-product-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <input type="text" id="prod-name" placeholder="Nombre del Producto" class="border p-2 rounded"
+                            required>
+                        <input type="number" id="prod-price" placeholder="Precio ($)" step="0.01"
+                            class="border p-2 rounded" required>
+                        <input type="file" id="prod-image" accept="image/*" class="border p-2 rounded bg-white">
+
+                        <div class="grid grid-cols-2 gap-2">
+                            <select id="prod-category" class="border p-2 rounded" required>
+                                <option value="">Categoría...</option>
+                                <option value="1">👕 Camisetas</option>
+                                <option value="2">👟 Botines</option>
+                                <option value="3">⚽ Accesorios</option>
+                            </select>
+                            <select id="prod-brand" class="border p-2 rounded" required>
+                                <option value="">Marca...</option>
+                                <option value="1">Nike</option>
+                                <option value="2">Adidas</option>
+                                <option value="3">Puma</option>
+                            </select>
+                        </div>
+
+                        <button type="submit"
+                            class="bg-sport-blue text-white font-bold py-2 rounded hover:bg-slate-800 transition md:col-span-2">
+                            + Crear Producto
+                        </button>
+                    </form>
                 </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-sm text-slate-600">
-                        <thead class="bg-slate-50 text-slate-800 uppercase font-semibold">
-                            <tr>
-                                <th class="px-6 py-4">ID</th>
-                                <th class="px-6 py-4">Nombre</th>
-                                <th class="px-6 py-4">Email</th>
-                                <th class="px-6 py-4">Rol</th>
-                                <th class="px-6 py-4">Estado</th>
-                            </tr>
-                        </thead>
-                        <tbody id="users-table-body" class="divide-y divide-slate-100">
-                            <!-- Dynamic Content -->
-                            <tr>
-                                <td colspan="5" class="px-6 py-4 text-center">Cargando usuarios...</td>
-                            </tr>
-                        </tbody>
-                    </table>
+
+                <!-- Product List -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+                    <div class="p-6 border-b border-slate-100 flex justify-between items-center">
+                        <h3 class="font-bold text-slate-800">Inventario Actual</h3>
+                        <button onclick="loadProducts()"
+                            class="text-sm text-sport-accent hover:underline">Recargar</button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm text-slate-600">
+                            <thead class="bg-slate-50 text-slate-800 uppercase font-semibold">
+                                <tr>
+                                    <th class="px-6 py-4">Imagen</th>
+                                    <th class="px-6 py-4">Nombre</th>
+                                    <th class="px-6 py-4">Precio</th>
+                                    <th class="px-6 py-4">Categoría</th>
+                                    <th class="px-6 py-4">Marca</th>
+                                    <th class="px-6 py-4">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="products-table-body" class="divide-y divide-slate-100">
+                                <tr>
+                                    <td colspan="6" class="px-6 py-4 text-center">Cargando...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
+
         </main>
     </div>
 
     <script>
         const API_URL = 'http://localhost:3000/api';
 
-        // Check Auth
+        // Initialization
         document.addEventListener('DOMContentLoaded', () => {
-            const userStr = localStorage.getItem('user');
+            checkAuth();
+            loadDashboardStats();
+            loadUsers();
+            loadProducts();
 
-            if (!userStr) {
-                window.location.href = 'login.html';
-                return;
-            }
+            // Listeners
+            document.getElementById('logout-btn-sidebar').addEventListener('click', logout);
+            document.getElementById('add-product-form').addEventListener('submit', handleAddProduct);
+        });
+
+        // Auth
+        function checkAuth() {
+            const userStr = localStorage.getItem('user');
+            if (!userStr) return window.location.href = 'login.html';
 
             const user = JSON.parse(userStr);
             if (user.role !== 'admin') {
-                alert('⛔ Acceso denegado: Se requieren permisos de administrador');
+                alert('⛔ Acceso denegado');
                 window.location.href = 'index.html';
-                return;
             }
-
             document.getElementById('admin-name').textContent = user.nombre;
+        }
 
-            // Load users list
-            loadUsers();
+        function logout() {
+            localStorage.removeItem('user');
+            window.location.href = 'login.html';
+        }
 
-            // Logout Handler
-            document.getElementById('logout-btn-sidebar').addEventListener('click', () => {
-                localStorage.removeItem('user');
-                window.location.href = 'login.html';
+        // Navigation
+        function switchView(viewName) {
+            // Hide all sections
+            document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
+            // Show selected
+            document.getElementById(`view-${viewName}`).classList.remove('hidden');
+
+            // Update Headers
+            const titles = {
+                'dashboard': 'Panel de Control',
+                'users': 'Gestión de Usuarios',
+                'products': 'Gestión de Productos'
+            };
+            document.getElementById('page-title').textContent = titles[viewName];
+
+            // Update Nav State
+            const navIds = ['nav-dashboard', 'nav-users', 'nav-products'];
+            navIds.forEach(id => {
+                const btn = document.getElementById(id);
+                if (id === `nav-${viewName}`) {
+                    btn.classList.add('bg-slate-800', 'text-sport-accent');
+                } else {
+                    btn.classList.remove('bg-slate-800', 'text-sport-accent');
+                }
             });
-        });
+        }
 
+        // --- USERS LOGIC ---
         async function loadUsers() {
             try {
-                const response = await fetch(`${API_URL}/users`);
-                const data = await response.json();
-
+                const res = await fetch(`${API_URL}/users`);
+                const data = await res.json();
                 const tbody = document.getElementById('users-table-body');
-                tbody.innerHTML = '';
-
-                data.users.forEach(u => {
-                    const row = document.createElement('tr');
-                    const roleBadge = u.role === 'admin'
-                        ? '<span class="px-2 py-1 text-xs font-bold bg-sport-blue text-white rounded">ADMIN</span>'
-                        : '<span class="px-2 py-1 text-xs font-bold bg-slate-200 text-slate-600 rounded">CLIENT</span>';
-
-                    row.innerHTML = `
+                tbody.innerHTML = data.users.map(u => `
+                    <tr>
                         <td class="px-6 py-4 font-mono text-xs">#${u.id}</td>
-                        <td class="px-6 py-4 font-medium text-slate-800">${u.nombre}</td>
+                        <td class="px-6 py-4 font-bold text-slate-700">${u.nombre}</td>
                         <td class="px-6 py-4">${u.email}</td>
-                        <td class="px-6 py-4">${roleBadge}</td>
+                        <td class="px-6 py-4"><span class="px-2 py-1 rounded text-xs font-bold ${u.role === 'admin' ? 'bg-sport-blue text-white' : 'bg-slate-200'}">${u.role}</span></td>
+                    </tr>
+                `).join('');
+            } catch (e) { console.error(e); }
+        }
+
+        // --- PRODUCTS LOGIC ---
+        async function loadProducts() {
+            try {
+                const res = await fetch(`${API_URL}/products`);
+                const products = await res.json();
+                const tbody = document.getElementById('products-table-body');
+
+                if (products.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-4 text-center text-slate-400">No hay productos</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = products.map(p => `
+                    <tr class="hover:bg-slate-50 transition">
                         <td class="px-6 py-4">
-                            <span class="w-2 h-2 rounded-full bg-green-500 inline-block mr-1"></span> Activo
+                            <img src="${p.imagen_url || 'https://via.placeholder.com/50'}" onerror="this.onerror=null; this.src='https://via.placeholder.com/50?text=Error';" class="w-10 h-10 object-contain bg-white border rounded">
                         </td>
-                    `;
-                    tbody.appendChild(row);
+                        <td class="px-6 py-4 font-medium text-slate-800">${p.nombre}</td>
+                        <td class="px-6 py-4 text-green-600 font-bold">$${p.precio}</td>
+                        <td class="px-6 py-4 text-xs">${p.categorias?.icono || ''} ${p.categorias?.nombre || 'N/A'}</td>
+                        <td class="px-6 py-4 text-xs font-bold text-slate-500">${p.marcas?.nombre || 'N/A'}</td>
+                        <td class="px-6 py-4">
+                            <button onclick="deleteProduct(${p.id})" class="text-red-500 hover:text-red-700 font-bold text-xs border border-red-200 hover:bg-red-50 px-2 py-1 rounded transition">
+                                🗑️ Eliminar
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (e) {
+                console.error(e);
+                document.getElementById('products-table-body').innerHTML = '<tr><td colspan="6" align="center">Error cargando productos</td></tr>';
+            }
+        }
+
+        async function handleAddProduct(e) {
+            e.preventDefault();
+            const nombre = document.getElementById('prod-name').value;
+            const precio = document.getElementById('prod-price').value;
+            const imageFile = document.getElementById('prod-image').files[0];
+            const categoria_id = document.getElementById('prod-category').value;
+            const marca_id = document.getElementById('prod-brand').value;
+
+            const formData = new FormData();
+            formData.append('nombre', nombre);
+            formData.append('precio', precio);
+            formData.append('categoria_id', categoria_id);
+            formData.append('marca_id', marca_id);
+            if (imageFile) {
+                formData.append('imagen', imageFile);
+            }
+
+            try {
+                const res = await fetch(`${API_URL}/products`, {
+                    method: 'POST',
+                    body: formData
                 });
+
+                if (res.ok) {
+                    alert('✅ Producto creado exitosamente');
+                    document.getElementById('add-product-form').reset();
+                    loadProducts();
+                } else {
+                    alert('❌ Error al crear producto');
+                }
             } catch (error) {
-                console.error('Error cargando usuarios:', error);
-                document.getElementById('users-table-body').innerHTML = `
-                    <tr><td colspan="5" class="px-6 py-4 text-center text-red-500">Error al cargar datos</td></tr>
-                `;
+                console.error(error);
+                alert('Error de conexión');
+            }
+        }
+
+        async function deleteProduct(id) {
+            if (!confirm('¿Estás seguro de que quieres eliminar este producto?')) return;
+
+            try {
+                const res = await fetch(`${API_URL}/products/${id}`, { method: 'DELETE' });
+                if (res.ok) {
+                    loadProducts();
+                } else {
+                    alert('Error al eliminar');
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        async function loadDashboardStats() {
+            try {
+                const res = await fetch(`${API_URL}/stats/dashboard`);
+                const data = await res.json();
+
+                document.getElementById('total-revenue').innerText = '$' + data.revenue.toFixed(2);
+                document.getElementById('total-orders').innerText = data.totalOrders;
+                document.getElementById('avg-ticket').innerText = '$' + data.averageTicket.toFixed(2);
+
+                const table = document.getElementById('recent-orders-table');
+                if (!data.recentOrders || data.recentOrders.length === 0) {
+                    table.innerHTML = '<tr><td colspan="4" class="px-6 py-4 text-center text-slate-400">No hay órdenes recientes</td></tr>';
+                } else {
+                    table.innerHTML = data.recentOrders.map(o => `
+                        <tr class="hover:bg-slate-50 transition">
+                            <td class="px-6 py-4 font-mono">#${o.id}</td>
+                            <td class="px-6 py-4 font-bold text-slate-700">${o.user_name || 'Invitado'}</td>
+                            <td class="px-6 py-4">${new Date(o.fecha).toLocaleDateString()} ${new Date(o.fecha).toLocaleTimeString()}</td>
+                            <td class="px-6 py-4 font-bold text-green-600">$${o.total.toFixed(2)}</td>
+                        </tr>
+                    `).join('');
+                }
+            } catch (error) {
+                console.error("Error loading stats:", error);
             }
         }
     </script>
