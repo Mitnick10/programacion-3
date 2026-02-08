@@ -175,17 +175,28 @@ function seedData() {
     // Verificar si hay productos
     db.get("SELECT count(*) as count FROM products", (err, row) => {
         if (row && row.count === 0) {
-            const products = [
-                { nombre: 'Camiseta Local 2024', precio: 89.99, imagen_url: 'https://images.unsplash.com/photo-1581622558663-b2e33377dfb2?q=80&w=2688&auto=format&fit=crop', categoria_id: 1, marca_id: 1 },
-                { nombre: 'Speed Pro X', precio: 129.99, imagen_url: 'https://images.unsplash.com/photo-1511886929837-354d827aae26?q=80&w=2564&auto=format&fit=crop', categoria_id: 2, marca_id: 2 },
-                { nombre: 'Balón Oficial', precio: 39.99, imagen_url: 'https://images.unsplash.com/photo-1614632537423-1e6c2e7e0aab?q=80&w=2674&auto=format&fit=crop', categoria_id: 3, marca_id: 3 },
-                { nombre: 'Camiseta Visitante', precio: 85.00, imagen_url: 'https://images.unsplash.com/photo-1577212017184-80cc0da11395?q=80&w=2548&auto=format&fit=crop', categoria_id: 1, marca_id: 2 },
-                { nombre: 'Future Z', precio: 110.00, imagen_url: 'https://images.unsplash.com/photo-1560769629-975ec94e6a86?q=80&w=2564&auto=format&fit=crop', categoria_id: 2, marca_id: 3 }
-            ];
-            const stmt = db.prepare("INSERT INTO products (nombre, precio, imagen_url, categoria_id, marca_id) VALUES (?, ?, ?, ?, ?)");
-            products.forEach(p => stmt.run(p.nombre, p.precio, p.imagen_url, p.categoria_id, p.marca_id));
-            stmt.finalize();
-            console.log('✅ Datos de prueba sembrados correctamente');
+            // Cargar productos desde archivo JSON (Persistencia basada en Git)
+            try {
+                const productsPath = path.join(__dirname, 'database/products.json');
+                let products = [];
+
+                if (fs.existsSync(productsPath)) {
+                    const data = fs.readFileSync(productsPath, 'utf8');
+                    products = JSON.parse(data);
+                    console.log(`📂 Cargando ${products.length} productos desde products.json`);
+                } else {
+                    console.warn('⚠️ No se encontró products.json, usando lista vacía.');
+                }
+
+                if (products.length > 0) {
+                    const stmt = db.prepare("INSERT INTO products (nombre, precio, imagen_url, categoria_id, marca_id) VALUES (?, ?, ?, ?, ?)");
+                    products.forEach(p => stmt.run(p.nombre, p.precio, p.imagen_url, p.categoria_id, p.marca_id));
+                    stmt.finalize();
+                    console.log('✅ Datos de productos sembrados correctamente');
+                }
+            } catch (error) {
+                console.error("❌ Error sembrando productos:", error);
+            }
         }
     });
 }
