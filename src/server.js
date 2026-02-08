@@ -31,6 +31,7 @@ const upload = multer({ storage: storage });
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../public')));
+app.use('/uploads', express.static(path.join(__dirname, '../public/uploads')));
 
 // Asegurar que el directorio de la base de datos exista
 const dbDir = path.join(__dirname, 'database');
@@ -426,6 +427,20 @@ app.delete('/api/products/:id', (req, res) => {
     db.run('DELETE FROM products WHERE id = ?', id, function (err) {
         if (err) return res.status(500).json({ error: err.message });
         res.json({ message: 'Producto eliminado', changes: this.changes });
+    });
+});
+
+// Endpoint de Respaldo (Backup)
+app.get('/api/admin/backup', (req, res) => {
+    db.all('SELECT * FROM products', [], (err, rows) => {
+        if (err) return res.status(500).json({ error: err.message });
+
+        // Convertir a formato bonito
+        const jsonContent = JSON.stringify(rows, null, 4);
+
+        res.setHeader('Content-Type', 'application/json');
+        res.setHeader('Content-Disposition', 'attachment; filename=products.json');
+        res.send(jsonContent);
     });
 });
 

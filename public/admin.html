@@ -178,8 +178,14 @@
                 <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
                     <div class="p-6 border-b border-slate-100 flex justify-between items-center">
                         <h3 class="font-bold text-slate-800">Inventario Actual</h3>
-                        <button onclick="loadProducts()"
-                            class="text-sm text-sport-accent hover:underline">Recargar</button>
+                        <div class="flex gap-3">
+                            <a href="/api/admin/backup" target="_blank"
+                                class="text-sm bg-emerald-600 text-white px-3 py-1 rounded hover:bg-emerald-700 transition flex items-center gap-1">
+                                💾 Descargar Respaldo
+                            </a>
+                            <button onclick="loadProducts()"
+                                class="text-sm text-sport-accent hover:underline">Recargar</button>
+                        </div>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left text-sm text-slate-600">
