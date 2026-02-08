@@ -430,47 +430,66 @@ app.post('/api/orders', (req, res) => {
 
     const date = new Date().toISOString();
 
-    // 1. Crear la orden
-    db.run(
-        'INSERT INTO orders (user_id, total, fecha) VALUES (?, ?, ?)',
-        [userId || null, total, date], // userId puede ser null para invitados
-        function (err) {
-            if (err) {
-                console.error('Error al crear orden:', err);
-                return res.status(500).json({ error: 'Error al procesar la orden' });
-            }
-
-            const orderId = this.lastID;
-            console.log(`🧾 Orden creada ID: ${orderId} - Total: ${total}`);
-
-            // 2. Insertar items
-            const stmt = db.prepare('INSERT INTO order_items (order_id, product_nombre, quantity, price) VALUES (?, ?, ?, ?)');
-
-            items.forEach(item => {
-                // Asumimos que item tiene { nombre, quantity, precio }
-                // Si el frontend manda solo { nombre, precio }, quantity default 1
-                const qty = item.quantity || 1;
-                stmt.run(orderId, item.nombre, qty, item.precio);
-            });
-
-            stmt.finalize((err) => {
+    // Función interna para crear la orden
+    const createOrder = (finalUserId) => {
+        // 1. Crear la orden
+        db.run(
+            'INSERT INTO orders (user_id, total, fecha) VALUES (?, ?, ?)',
+            [finalUserId, total, date], // userId validado o null
+            function (err) {
                 if (err) {
-                    console.error('Error al insertar items:', err);
+                    console.error('Error al crear orden:', err);
+                    return res.status(500).json({ error: 'Error al procesar la orden' });
                 }
 
-                res.status(201).json({
-                    success: true,
-                    message: 'Orden creada exitosamente',
-                    order: {
-                        id: orderId,
-                        date: date,
-                        total: total,
-                        items: items
-                    }
+                const orderId = this.lastID;
+                console.log(`🧾 Orden creada ID: ${orderId} - Total: ${total} (User: ${finalUserId || 'Guest'})`);
+
+                // 2. Insertar items
+                const stmt = db.prepare('INSERT INTO order_items (order_id, product_nombre, quantity, price) VALUES (?, ?, ?, ?)');
+
+                items.forEach(item => {
+                    const qty = item.quantity || 1;
+                    stmt.run(orderId, item.nombre, qty, item.precio);
                 });
-            });
-        }
-    );
+
+                stmt.finalize((err) => {
+                    if (err) {
+                        console.error('Error al insertar items:', err);
+                    }
+
+                    res.status(201).json({
+                        success: true,
+                        message: 'Orden creada exitosamente',
+                        order: {
+                            id: orderId,
+                            date: date,
+                            total: total,
+                            items: items
+                        }
+                    });
+                });
+            }
+        );
+    };
+
+    // Validar usuario si existe
+    if (userId) {
+        db.get('SELECT id FROM users WHERE id = ?', [userId], (err, row) => {
+            if (err) {
+                console.error('Error verificando usuario:', err);
+                // Si hay error en DB, intentamos como invitado por seguridad
+                createOrder(null);
+            } else if (!row) {
+                console.warn(`⚠️ Usuario ID ${userId} no encontrado (posible DB reset). Creando orden como invitado.`);
+                createOrder(null);
+            } else {
+                createOrder(userId);
+            }
+        });
+    } else {
+        createOrder(null);
+    }
 });
 
 // ========== STATS API ==========
