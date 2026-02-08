@@ -345,6 +345,8 @@
             if (imageFile) {
                 formData.append('imagen', imageFile);
             } else if (imageUrl) {
+                // DEBUG: Confirm URL is captured
+                alert(`📤 Enviando imagen por URL: ${imageUrl}`);
                 formData.append('urlImagen', imageUrl);
             }
 
