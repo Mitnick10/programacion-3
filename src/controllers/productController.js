@@ -37,8 +37,12 @@ const getBrands = (req, res) => {
 };
 
 const createProduct = (req, res) => {
+    console.log("📦 createProduct Body:", req.body);
+    console.log("📂 createProduct File:", req.file);
+
     const { nombre, precio, categoria_id, marca_id } = req.body;
-    const imagen_url = req.file ? `/uploads/${req.file.filename}` : (req.body.urlImagen || null);
+    // Fallback support for both urlImagen and imagen_url
+    const imagen_url = req.file ? `/uploads/${req.file.filename}` : (req.body.urlImagen || req.body.imagen_url || null);
 
     if (!nombre || !precio) {
         return res.status(400).json({ error: 'Nombre y precio son obligatorios' });
