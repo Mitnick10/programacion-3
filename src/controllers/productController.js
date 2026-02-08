@@ -34,7 +34,7 @@ const getBrands = (req, res) => {
 
 const createProduct = (req, res) => {
     const { nombre, precio, categoria_id, marca_id } = req.body;
-    const imagen_url = req.file ? `/uploads/${req.file.filename}` : null;
+    const imagen_url = req.file ? `/uploads/${req.file.filename}` : (req.body.imagen_url || null);
 
     if (!nombre || !precio) {
         return res.status(400).json({ error: 'Nombre y precio son obligatorios' });
