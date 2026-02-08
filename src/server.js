@@ -32,8 +32,15 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../public')));
 
+// Asegurar que el directorio de la base de datos exista
+const dbDir = path.join(__dirname, 'database');
+if (!fs.existsSync(dbDir)) {
+    fs.mkdirSync(dbDir, { recursive: true });
+    console.log('📂 Directorio de base de datos creado:', dbDir);
+}
+
 // Conexión a la base de datos SQLite
-const db = new sqlite3.Database(path.join(__dirname, 'database/futbolstore.db'), (err) => {
+const db = new sqlite3.Database(path.join(dbDir, 'futbolstore.db'), (err) => {
     if (err) {
         console.error('❌ Error al conectar a la base de datos:', err.message);
     } else {
