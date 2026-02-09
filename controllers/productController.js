@@ -3,7 +3,10 @@ const Product = require('../models/Product');
 // Crear producto (solo admin)
 const crearProducto = async (req, res) => {
     try {
-        const { nombre, codigo, precio, descripcion, categoria } = req.body;
+        console.log('⚡ Recibiendo solicitud de creación de producto');
+        const { nombre, codigo, precio, descripcion, categoria, imagen_url } = req.body;
+
+        console.log(`📦 Datos recibidos: Nombre=${nombre}, Código=${codigo}, ImagenLength=${imagen_url ? imagen_url.length : 0}`);
 
         // Validar campos obligatorios
         if (!nombre || !codigo || !precio || !descripcion || !categoria) {
@@ -32,7 +35,8 @@ const crearProducto = async (req, res) => {
             codigo: codigo.toUpperCase(),
             precio,
             descripcion,
-            categoria
+            categoria,
+            imagen_url
         });
 
         await nuevoProducto.save();

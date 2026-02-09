@@ -4,209 +4,165 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel - FútbolStore</title>
+    <title>Panel de Administración - FútbolStore</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'sport-blue': '#0f172a',
-                        'sport-accent': '#f97316',
-                    }
-                }
-            }
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+        * {
+            font-family: 'Inter', sans-serif;
         }
-    </script>
+    </style>
 </head>
 
-<body class="bg-slate-100 min-h-screen flex">
+<body class="bg-gray-50">
 
-    <!-- Sidebar -->
-    <aside class="w-64 bg-sport-blue text-white hidden md:flex flex-col">
-        <div class="p-6 border-b border-slate-700">
-            <h1 class="text-2xl font-bold">
-                FÚTBOL<span class="text-sport-accent">ADMIN</span>
-            </h1>
-        </div>
-        <nav class="flex-1 p-4 space-y-2">
-            <button onclick="switchView('dashboard')" id="nav-dashboard"
-                class="w-full text-left py-3 px-4 rounded hover:bg-slate-800 bg-slate-800 text-sport-accent font-semibold transition">
-                📊 Dashboard
-            </button>
-            <button onclick="switchView('users')" id="nav-users"
-                class="w-full text-left py-3 px-4 rounded hover:bg-slate-800 transition">
-                👥 Usuarios
-            </button>
-            <button onclick="switchView('products')" id="nav-products"
-                class="w-full text-left py-3 px-4 rounded hover:bg-slate-800 transition">
-                📦 Productos
-            </button>
-            <div class="pt-4 mt-4 border-t border-slate-700">
-                <a href="index.html"
-                    class="block py-3 px-4 rounded hover:bg-slate-800 transition text-slate-300 hover:text-white">
-                    🏠 Ver Tienda
-                </a>
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-4">
+                    <h1 class="text-2xl font-bold text-gray-800">
+                        FÚTBOL<span class="text-orange-500">STORE</span>
+                        <span class="text-sm font-normal text-gray-500 ml-2">Admin Panel</span>
+                    </h1>
+                </div>
+                <div class="flex items-center gap-4">
+                    <a href="index.html" class="text-sm text-gray-600 hover:text-orange-500 transition">
+                        Ver Tienda
+                    </a>
+                    <span id="admin-name" class="text-sm font-medium text-gray-700"></span>
+                    <button onclick="logout()"
+                        class="text-sm bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition">
+                        Cerrar Sesión
+                    </button>
+                </div>
             </div>
-        </nav>
-        <div class="p-4 border-t border-slate-700">
-            <button id="logout-btn-sidebar"
-                class="w-full flex items-center justify-center gap-2 py-2 px-4 rounded bg-red-600 hover:bg-red-700 transition">
-                <span>Cerrar Sesión</span>
-            </button>
         </div>
-    </aside>
+    </nav>
 
     <!-- Main Content -->
-    <div class="flex-1 flex flex-col h-screen overflow-hidden">
-        <!-- Dashboard Content -->
-        <main class="flex-1 p-6 md:p-8 overflow-y-auto">
-            <div class="flex justify-between items-center mb-8">
-                <div>
-                    <h2 id="page-title" class="text-2xl font-bold text-slate-800">Panel de Control</h2>
-                    <p class="text-slate-500">Bienvenido de nuevo, <span id="admin-name"
-                            class="font-semibold text-sport-blue">Admin</span></p>
-                </div>
-            </div>
+    <div class="container mx-auto px-4 py-8">
 
-            <!-- VIEW: DASHBOARD (Resumen) -->
-            <div id="view-dashboard" class="view-section">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
-                        <div class="text-slate-500 text-sm mb-1">Ventas Totales</div>
-                        <div class="text-2xl font-bold text-slate-800" id="total-revenue">$0.00</div>
-                    </div>
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
-                        <div class="text-slate-500 text-sm mb-1">Total Pedidos</div>
-                        <div class="text-2xl font-bold text-slate-800" id="total-orders">0</div>
-                    </div>
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
-                        <div class="text-slate-500 text-sm mb-1">Ticket Promedio</div>
-                        <div class="text-2xl font-bold text-slate-800" id="avg-ticket">$0.00</div>
-                    </div>
-                </div>
+        <!-- Alert Message -->
+        <div id="alert-message" class="hidden mb-6 p-4 rounded-lg"></div>
 
-                <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden mb-8">
-                    <div class="p-6 border-b border-slate-100 flex justify-between items-center">
-                        <h3 class="font-bold text-slate-800">Órdenes Recientes</h3>
-                        <button onclick="loadDashboardStats()" class="text-sm text-sport-accent hover:underline">🔄
-                            Actualizar</button>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-sm text-slate-600">
-                            <thead class="bg-slate-50 text-slate-800 uppercase font-semibold">
-                                <tr>
-                                    <th class="px-6 py-4">ID</th>
-                                    <th class="px-6 py-4">Cliente</th>
-                                    <th class="px-6 py-4">Fecha</th>
-                                    <th class="px-6 py-4">Total</th>
-                                </tr>
-                            </thead>
-                            <tbody id="recent-orders-table" class="divide-y divide-slate-100">
-                                <tr>
-                                    <td colspan="4" class="px-6 py-4 text-center">Cargando...</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+        <!-- Two Column Layout -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-            <!-- VIEW: USERS -->
-            <div id="view-users" class="view-section hidden">
-                <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-                    <div class="p-6 border-b border-slate-100 flex justify-between items-center">
-                        <h3 class="font-bold text-slate-800">Usuarios Registrados</h3>
-                        <button onclick="loadUsers()"
-                            class="text-sm text-sport-accent hover:underline">Recargar</button>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-sm text-slate-600">
-                            <thead class="bg-slate-50 text-slate-800 uppercase font-semibold">
-                                <tr>
-                                    <th class="px-6 py-4">ID</th>
-                                    <th class="px-6 py-4">Nombre</th>
-                                    <th class="px-6 py-4">Email</th>
-                                    <th class="px-6 py-4">Rol</th>
-                                </tr>
-                            </thead>
-                            <tbody id="users-table-body" class="divide-y divide-slate-100">
-                                <tr>
-                                    <td colspan="4" class="px-6 py-4 text-center">Cargando...</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+            <!-- Create Product Section -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-lg shadow-md p-6 sticky top-4">
+                    <h2 class="text-xl font-bold text-gray-800 mb-6">Crear Nuevo Producto</h2>
 
-            <!-- VIEW: PRODUCTS -->
-            <div id="view-products" class="view-section hidden">
-                <!-- Add Product Form -->
-                <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-8">
-                    <h3 class="font-bold text-slate-800 mb-4">✨ Agregar Nuevo Producto</h3>
-                    <form id="add-product-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <input type="text" id="prod-name" placeholder="Nombre del Producto" class="border p-2 rounded"
-                            required>
-                        <input type="number" id="prod-price" placeholder="Precio ($)" step="0.01"
-                            class="border p-2 rounded" required>
-                        <div class="flex flex-col gap-2">
-                            <input type="file" id="prod-image" accept="image/*"
-                                class="border p-2 rounded bg-white text-sm">
-                            <input type="url" id="prod-image-url" placeholder="O pega URL de imagen (https://...)"
-                                class="border p-2 rounded text-sm">
+                    <form id="create-product-form" class="space-y-4">
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Nombre</label>
+                            <input type="text" id="nombre" required
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                                placeholder="Ej: Zapatillas Nike Air">
                         </div>
 
-                        <div class="grid grid-cols-2 gap-2">
-                            <select id="prod-category" class="border p-2 rounded" required>
-                                <option value="">Categoría...</option>
-                                <option value="1">👕 Camisetas</option>
-                                <option value="2">👟 Botines</option>
-                                <option value="3">⚽ Accesorios</option>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Código</label>
+                            <input type="text" id="codigo" required
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent uppercase"
+                                placeholder="Ej: NK001">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Precio ($)</label>
+                            <input type="number" id="precio" step="0.01" min="0.01" required
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                                placeholder="99.99">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Categoría</label>
+                            <select id="categoria" required
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                <option value="">Seleccionar...</option>
+                                <option value="Futbol">Fútbol</option>
+                                <option value="Running">Running</option>
+                                <option value="Gym">Gym</option>
+                                <option value="Basketball">Basketball</option>
+                                <option value="Tennis">Tennis</option>
+                                <option value="Natacion">Natación</option>
+                                <option value="Ciclismo">Ciclismo</option>
+                                <option value="Otros">Otros</option>
                             </select>
-                            <select id="prod-brand" class="border p-2 rounded" required>
-                                <option value="">Marca...</option>
-                                <option value="1">Nike</option>
-                                <option value="2">Adidas</option>
-                                <option value="3">Puma</option>
-                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Descripción</label>
+                            <textarea id="descripcion" rows="3" required
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                                placeholder="Descripción del producto..."></textarea>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Imagen del Producto</label>
+
+                            <input type="file" id="imagen_file" accept="image/*"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100">
+                            <p class="text-xs text-gray-500 mt-1">Formatos: JPG, PNG, GIF, WEBP. Máx: 5MB</p>
+
+                            <!-- Image Preview -->
+                            <div id="image-preview" class="hidden mt-3">
+                                <p class="text-xs text-gray-600 mb-2">Vista previa:</p>
+                                <img id="preview-img" class="w-32 h-32 object-cover rounded border" alt="Preview">
+                                <button type="button" onclick="clearImagePreview()"
+                                    class="text-xs text-red-500 hover:text-red-700 mt-2">
+                                    ✕ Eliminar
+                                </button>
+                            </div>
                         </div>
 
                         <button type="submit"
-                            class="bg-sport-blue text-white font-bold py-2 rounded hover:bg-slate-800 transition md:col-span-2">
-                            + Crear Producto
+                            class="w-full bg-orange-500 text-white py-3 rounded-lg font-bold hover:bg-orange-600 transition">
+                            ➕ Crear Producto
                         </button>
                     </form>
                 </div>
+            </div>
 
-                <!-- Product List -->
-                <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-                    <div class="p-6 border-b border-slate-100 flex justify-between items-center">
-                        <h3 class="font-bold text-slate-800">Inventario Actual</h3>
-                        <div class="flex gap-3">
-                            <a href="/api/admin/backup" target="_blank"
-                                class="text-sm bg-emerald-600 text-white px-3 py-1 rounded hover:bg-emerald-700 transition flex items-center gap-1">
-                                💾 Descargar Respaldo
-                            </a>
-                            <button onclick="loadProducts()"
-                                class="text-sm text-sport-accent hover:underline">Recargar</button>
-                        </div>
+            <!-- Products List Section -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-bold text-gray-800">Lista de Productos</h2>
+                        <button onclick="loadProducts()"
+                            class="text-sm bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded transition">
+                            🔄 Recargar
+                        </button>
                     </div>
+
+                    <div id="products-count" class="text-sm text-gray-600 mb-4"></div>
+
+                    <!-- Products Table -->
                     <div class="overflow-x-auto">
-                        <table class="w-full text-left text-sm text-slate-600">
-                            <thead class="bg-slate-50 text-slate-800 uppercase font-semibold">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
                                 <tr>
-                                    <th class="px-6 py-4">Imagen</th>
-                                    <th class="px-6 py-4">Nombre</th>
-                                    <th class="px-6 py-4">Precio</th>
-                                    <th class="px-6 py-4">Categoría</th>
-                                    <th class="px-6 py-4">Marca</th>
-                                    <th class="px-6 py-4">Acciones</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Producto
+                                    </th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Código
+                                    </th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Precio
+                                    </th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                        Categoría</th>
+                                    <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">
+                                        Acciones</th>
                                 </tr>
                             </thead>
-                            <tbody id="products-table-body" class="divide-y divide-slate-100">
+                            <tbody id="products-table-body" class="bg-white divide-y divide-gray-200">
                                 <tr>
-                                    <td colspan="6" class="px-6 py-4 text-center">Cargando...</td>
+                                    <td colspan="5" class="px-4 py-8 text-center text-gray-500">
+                                        Cargando productos...
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -214,204 +170,244 @@
                 </div>
             </div>
 
-        </main>
+        </div>
     </div>
 
     <script>
         const API_URL = 'http://localhost:3000/api';
+        let allProducts = [];
+        let uploadedImageUrl = null;
 
-        // Initialization
-        document.addEventListener('DOMContentLoaded', () => {
-            checkAuth();
-            loadDashboardStats();
-            loadUsers();
-            loadProducts();
 
-            // Listeners
-            document.getElementById('logout-btn-sidebar').addEventListener('click', logout);
-            document.getElementById('add-product-form').addEventListener('submit', handleAddProduct);
+        // Image preview functionality
+        document.getElementById('imagen_file').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    document.getElementById('preview-img').src = event.target.result;
+                    document.getElementById('image-preview').classList.remove('hidden');
+                };
+                reader.readAsDataURL(file);
+            }
         });
 
-        // Auth
-        function checkAuth() {
-            const userStr = localStorage.getItem('user');
-            if (!userStr) return window.location.href = 'login.html';
-
-            const user = JSON.parse(userStr);
-            if (user.role !== 'admin') {
-                alert('⛔ Acceso denegado');
-                window.location.href = 'index.html';
-            }
-            document.getElementById('admin-name').textContent = user.nombre;
+        // Clear image preview
+        function clearImagePreview() {
+            document.getElementById('imagen_file').value = '';
+            document.getElementById('image-preview').classList.add('hidden');
+            uploadedImageUrl = null;
         }
 
+
+
+        // Check if user is admin
+        function checkAdminAccess() {
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            const token = localStorage.getItem('token');
+
+            if (!user.email || !token) {
+                alert('Debes iniciar sesión para acceder al panel de administración');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            if (user.nivel !== 'admin') {
+                alert('⛔ Acceso denegado. Solo administradores pueden acceder a este panel.');
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Display admin name
+            document.getElementById('admin-name').textContent = user.nombre || user.email;
+        }
+
+        // Show alert message
+        function showAlert(message, type = 'success') {
+            const alertDiv = document.getElementById('alert-message');
+            alertDiv.className = `mb-6 p-4 rounded-lg ${type === 'success' ? 'bg-green-100 text-green-700 border border-green-300' : 'bg-red-100 text-red-700 border border-red-300'}`;
+            alertDiv.textContent = message;
+            alertDiv.classList.remove('hidden');
+
+            setTimeout(() => {
+                alertDiv.classList.add('hidden');
+            }, 5000);
+        }
+
+        // Load all products
+        async function loadProducts() {
+            try {
+                const response = await fetch(`${API_URL}/productos`);
+                const data = await response.json();
+                allProducts = data.productos || [];
+
+                document.getElementById('products-count').textContent = `Total: ${allProducts.length} productos`;
+
+                renderProductsTable();
+            } catch (error) {
+                console.error('Error loading products:', error);
+                showAlert('Error cargando productos', 'error');
+            }
+        }
+
+        // Render products table
+        function renderProductsTable() {
+            const tbody = document.getElementById('products-table-body');
+
+            if (allProducts.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="px-4 py-8 text-center text-gray-500">
+                            No hay productos disponibles
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = allProducts.map(p => `
+                <tr class="hover:bg-gray-50">
+                    <td class="px-4 py-4">
+                        <div class="flex items-center">
+                            <div class="h-10 w-10 flex-shrink-0 mr-3">
+                                ${p.imagen_url ? `<img src="${p.imagen_url}" class="h-10 w-10 object-cover rounded" alt="${p.nombre}">` : '<div class="h-10 w-10 bg-gray-200 rounded flex items-center justify-center text-xl">📦</div>'}
+                            </div>
+                            <div>
+                                <div class="text-sm font-medium text-gray-900">${p.nombre}</div>
+                                <div class="text-xs text-gray-500 line-clamp-1">${p.descripcion}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-4 py-4 text-sm text-gray-700">${p.codigo}</td>
+                    <td class="px-4 py-4 text-sm font-semibold text-gray-900">$${p.precio.toFixed(2)}</td>
+                    <td class="px-4 py-4 text-sm text-gray-700">${p.categoria}</td>
+                    <td class="px-4 py-4 text-center">
+                        <button onclick="deleteProduct('${p._id}', '${p.nombre.replace(/'/g, "\\'")}', '${p.codigo}')"
+                            class="text-red-600 hover:text-red-800 font-medium text-sm">
+                            🗑️ Eliminar
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Create product
+        document.getElementById('create-product-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const token = localStorage.getItem('token');
+            const productData = {
+                nombre: document.getElementById('nombre').value,
+                codigo: document.getElementById('codigo').value.toUpperCase(),
+                precio: parseFloat(document.getElementById('precio').value),
+                categoria: document.getElementById('categoria').value,
+                descripcion: document.getElementById('descripcion').value
+            };
+
+            const fileInput = document.getElementById('imagen_file');
+
+            if (fileInput.files.length > 0) {
+                console.log('📤 Procesando imagen...');
+                showAlert('⏳ Procesando imagen...', 'success');
+
+                try {
+                    const file = fileInput.files[0];
+                    const reader = new FileReader();
+
+                    const base64String = await new Promise((resolve, reject) => {
+                        reader.onload = () => resolve(reader.result);
+                        reader.onerror = error => reject(error);
+                        reader.readAsDataURL(file);
+                    });
+
+                    if (base64String) {
+                        productData.imagen_url = base64String;
+                        console.log('✅ Imagen convertida a Base64');
+                        showAlert('✅ Imagen lista para guardar', 'success');
+                    }
+                } catch (error) {
+                    console.error('❌ Error procesando imagen:', error);
+                    showAlert('❌ Error al procesar imagen', 'error');
+                    return;
+                }
+            } else {
+                console.warn('⚠️ No se seleccionó ningún archivo');
+                const continuar = confirm('⚠️ No seleccionaste una imagen.\n\n¿Crear producto sin imagen?\n\n(Se mostrará un icono 📦 por defecto)');
+                if (!continuar) {
+                    showAlert('⚠️ Selecciona una imagen primero', 'error');
+                    return;
+                }
+            }
+
+            console.log('📦 Datos finales del producto:', productData);
+
+            try {
+                const response = await fetch(`${API_URL}/productos`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(productData)
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showAlert(`✅ Producto "${data.producto.nombre}" creado exitosamente`, 'success');
+                    document.getElementById('create-product-form').reset();
+                    clearImagePreview();
+                    loadProducts();
+                } else {
+                    showAlert(`❌ ${data.error || 'Error al crear producto'}`, 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert('❌ Error de conexión', 'error');
+            }
+        });
+
+        // Delete product
+        async function deleteProduct(id, nombre, codigo) {
+            if (!confirm(`¿Estás seguro de eliminar "${nombre}" (${codigo})?`)) {
+                return;
+            }
+
+            const token = localStorage.getItem('token');
+
+            try {
+                const response = await fetch(`${API_URL}/productos/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    showAlert(`✅ Producto "${nombre}" eliminado exitosamente`, 'success');
+                    loadProducts();
+                } else {
+                    const data = await response.json();
+                    showAlert(`❌ ${data.error || 'Error al eliminar producto'}`, 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert('❌ Error de conexión', 'error');
+            }
+        }
+
+        // Logout
         function logout() {
             localStorage.removeItem('user');
+            localStorage.removeItem('token');
             window.location.href = 'login.html';
         }
 
-        // Navigation
-        function switchView(viewName) {
-            // Hide all sections
-            document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
-            // Show selected
-            document.getElementById(`view-${viewName}`).classList.remove('hidden');
-
-            // Update Headers
-            const titles = {
-                'dashboard': 'Panel de Control',
-                'users': 'Gestión de Usuarios',
-                'products': 'Gestión de Productos'
-            };
-            document.getElementById('page-title').textContent = titles[viewName];
-
-            // Update Nav State
-            const navIds = ['nav-dashboard', 'nav-users', 'nav-products'];
-            navIds.forEach(id => {
-                const btn = document.getElementById(id);
-                if (id === `nav-${viewName}`) {
-                    btn.classList.add('bg-slate-800', 'text-sport-accent');
-                } else {
-                    btn.classList.remove('bg-slate-800', 'text-sport-accent');
-                }
-            });
-        }
-
-        // --- USERS LOGIC ---
-        async function loadUsers() {
-            try {
-                const res = await fetch(`${API_URL}/users`);
-                const data = await res.json();
-                const tbody = document.getElementById('users-table-body');
-                tbody.innerHTML = data.users.map(u => `
-                    <tr>
-                        <td class="px-6 py-4 font-mono text-xs">#${u.id}</td>
-                        <td class="px-6 py-4 font-bold text-slate-700">${u.nombre}</td>
-                        <td class="px-6 py-4">${u.email}</td>
-                        <td class="px-6 py-4"><span class="px-2 py-1 rounded text-xs font-bold ${u.role === 'admin' ? 'bg-sport-blue text-white' : 'bg-slate-200'}">${u.role}</span></td>
-                    </tr>
-                `).join('');
-            } catch (e) { console.error(e); }
-        }
-
-        // --- PRODUCTS LOGIC ---
-        async function loadProducts() {
-            try {
-                const res = await fetch(`${API_URL}/products`);
-                const products = await res.json();
-                const tbody = document.getElementById('products-table-body');
-
-                if (products.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-4 text-center text-slate-400">No hay productos</td></tr>';
-                    return;
-                }
-
-                tbody.innerHTML = products.map(p => `
-                    <tr class="hover:bg-slate-50 transition">
-                        <td class="px-6 py-4">
-                            <img src="${p.imagen_url || 'https://via.placeholder.com/50'}" onerror="this.onerror=null; this.src='https://via.placeholder.com/50?text=Error';" class="w-10 h-10 object-contain bg-white border rounded">
-                        </td>
-                        <td class="px-6 py-4 font-medium text-slate-800">${p.nombre}</td>
-                        <td class="px-6 py-4 text-green-600 font-bold">$${p.precio}</td>
-                        <td class="px-6 py-4 text-xs">${p.categorias?.icono || ''} ${p.categorias?.nombre || 'N/A'}</td>
-                        <td class="px-6 py-4 text-xs font-bold text-slate-500">${p.marcas?.nombre || 'N/A'}</td>
-                        <td class="px-6 py-4">
-                            <button onclick="deleteProduct(${p.id})" class="text-red-500 hover:text-red-700 font-bold text-xs border border-red-200 hover:bg-red-50 px-2 py-1 rounded transition">
-                                🗑️ Eliminar
-                            </button>
-                        </td>
-                    </tr>
-                `).join('');
-            } catch (e) {
-                console.error(e);
-                document.getElementById('products-table-body').innerHTML = '<tr><td colspan="6" align="center">Error cargando productos</td></tr>';
-            }
-        }
-
-        async function handleAddProduct(e) {
-            e.preventDefault();
-            const nombre = document.getElementById('prod-name').value;
-            const precio = document.getElementById('prod-price').value;
-            const imageFile = document.getElementById('prod-image').files[0];
-            const imageUrl = document.getElementById('prod-image-url').value;
-            const categoria_id = document.getElementById('prod-category').value;
-            const marca_id = document.getElementById('prod-brand').value;
-
-            const formData = new FormData();
-            formData.append('nombre', nombre);
-            formData.append('precio', precio);
-            formData.append('categoria_id', categoria_id);
-            formData.append('marca_id', marca_id);
-            if (imageFile) {
-                formData.append('imagen', imageFile);
-            } else if (imageUrl) {
-                // DEBUG: Confirm URL is captured
-                alert(`📤 Enviando imagen por URL: ${imageUrl}`);
-                formData.append('urlImagen', imageUrl);
-            }
-
-            try {
-                const res = await fetch(`${API_URL}/products`, {
-                    method: 'POST',
-                    body: formData
-                });
-
-                if (res.ok) {
-                    alert('✅ Producto creado exitosamente');
-                    document.getElementById('add-product-form').reset();
-                    loadProducts();
-                } else {
-                    const errorData = await res.json();
-                    alert(`❌ Error al crear producto: ${errorData.error || 'Desconocido'}`);
-                }
-            } catch (error) {
-                console.error(error);
-                alert('Error de conexión');
-            }
-        }
-
-        async function deleteProduct(id) {
-            if (!confirm('¿Estás seguro de que quieres eliminar este producto?')) return;
-
-            try {
-                const res = await fetch(`${API_URL}/products/${id}`, { method: 'DELETE' });
-                if (res.ok) {
-                    loadProducts();
-                } else {
-                    alert('Error al eliminar');
-                }
-            } catch (error) {
-                console.error(error);
-            }
-        }
-
-        async function loadDashboardStats() {
-            try {
-                const res = await fetch(`${API_URL}/stats/dashboard`);
-                const data = await res.json();
-
-                document.getElementById('total-revenue').innerText = '$' + data.revenue.toFixed(2);
-                document.getElementById('total-orders').innerText = data.totalOrders;
-                document.getElementById('avg-ticket').innerText = '$' + data.averageTicket.toFixed(2);
-
-                const table = document.getElementById('recent-orders-table');
-                if (!data.recentOrders || data.recentOrders.length === 0) {
-                    table.innerHTML = '<tr><td colspan="4" class="px-6 py-4 text-center text-slate-400">No hay órdenes recientes</td></tr>';
-                } else {
-                    table.innerHTML = data.recentOrders.map(o => `
-                        <tr class="hover:bg-slate-50 transition">
-                            <td class="px-6 py-4 font-mono">#${o.id}</td>
-                            <td class="px-6 py-4 font-bold text-slate-700">${o.user_name || 'Invitado'}</td>
-                            <td class="px-6 py-4">${new Date(o.fecha).toLocaleDateString()} ${new Date(o.fecha).toLocaleTimeString()}</td>
-                            <td class="px-6 py-4 font-bold text-green-600">$${o.total.toFixed(2)}</td>
-                        </tr>
-                    `).join('');
-                }
-            } catch (error) {
-                console.error("Error loading stats:", error);
-            }
-        }
+        // Initialize
+        checkAdminAccess();
+        loadProducts();
     </script>
+
 </body>
 
 </html>

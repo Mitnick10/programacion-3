@@ -6,79 +6,92 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro - FútbolStore</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'sport-blue': '#0f172a',
-                        'sport-accent': '#f97316',
-                    }
-                }
-            }
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        * {
+            font-family: 'Inter', sans-serif;
         }
-    </script>
+    </style>
 </head>
 
-<body class="bg-gradient-to-br from-slate-100 to-slate-200 min-h-screen flex items-center justify-center p-4">
+<body class="bg-gray-50">
 
-    <div class="w-full max-w-md">
-        <div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
-            <div class="bg-gradient-to-r from-sport-blue to-slate-800 p-8 text-center">
-                <h1 class="text-3xl font-bold text-white mb-2">
-                    FÚTBOL<span class="text-sport-accent">STORE</span>
-                </h1>
-                <p class="text-slate-300 text-sm">Crea tu cuenta</p>
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <a href="index.html" class="text-2xl font-bold text-gray-800">
+                    FÚTBOL<span class="text-orange-500">STORE</span>
+                </a>
+                <a href="index.html" class="text-sm text-gray-600 hover:text-orange-500 transition">
+                    ← Volver a la tienda
+                </a>
             </div>
+        </div>
+    </nav>
 
-            <div class="p-8">
+    <!-- Main Content -->
+    <div class="min-h-screen flex items-center justify-center py-12 px-4">
+        <div class="max-w-md w-full">
+
+            <!-- Card -->
+            <div class="bg-white rounded-lg shadow-xl p-8">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-2">Crear Cuenta</h2>
+                    <p class="text-gray-600">Regístrate para empezar a comprar</p>
+                </div>
+
+                <!-- Register Form -->
                 <form id="registro-form" class="space-y-6">
+
+                    <!-- Nombre -->
                     <div>
-                        <label for="nombre" class="block text-sm font-semibold text-slate-700 mb-2">
+                        <label for="nombre" class="block text-sm font-medium text-gray-700 mb-2">
                             Nombre Completo
                         </label>
-                        <input type="text" id="nombre" required placeholder="Tu Nombre"
-                            class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:border-sport-accent focus:ring-2 focus:ring-sport-accent focus:ring-opacity-20 outline-none transition">
+                        <input type="text" id="nombre" name="nombre" required
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition"
+                            placeholder="Juan Pérez">
                     </div>
 
+                    <!-- Email -->
                     <div>
-                        <label for="email" class="block text-sm font-semibold text-slate-700 mb-2">
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
                             Correo Electrónico
                         </label>
-                        <input type="email" id="email" required placeholder="tu@email.com"
-                            class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:border-sport-accent focus:ring-2 focus:ring-sport-accent focus:ring-opacity-20 outline-none transition">
+                        <input type="email" id="email" name="email" required
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition"
+                            placeholder="tu@email.com">
                     </div>
 
-
-
+                    <!-- Password -->
                     <div>
-                        <label for="password" class="block text-sm font-semibold text-slate-700 mb-2">
+                        <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
                             Contraseña
                         </label>
-                        <input type="password" id="password" required minlength="6" placeholder="Mínimo 6 caracteres"
-                            class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:border-sport-accent focus:ring-2 focus:ring-sport-accent focus:ring-opacity-20 outline-none transition">
+                        <input type="password" id="password" name="password" required minlength="6"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition"
+                            placeholder="Mínimo 6 caracteres">
+                        <p class="text-xs text-gray-500 mt-1">Mínimo 6 caracteres</p>
                     </div>
 
-                    <div>
-                        <label for="confirm-password" class="block text-sm font-semibold text-slate-700 mb-2">
-                            Confirmar Contraseña
-                        </label>
-                        <input type="password" id="confirm-password" required minlength="6"
-                            placeholder="Repite tu contraseña"
-                            class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:border-sport-accent focus:ring-2 focus:ring-sport-accent focus:ring-opacity-20 outline-none transition">
-                    </div>
+                    <!-- Message -->
+                    <div id="message" class="hidden p-3 rounded-lg text-sm"></div>
 
+                    <!-- Submit Button -->
                     <button type="submit"
-                        class="w-full bg-gradient-to-r from-sport-accent to-orange-600 text-white font-bold py-3 px-6 rounded-lg hover:from-orange-600 hover:to-sport-accent transform hover:scale-105 transition duration-200 shadow-lg">
+                        class="w-full bg-orange-500 text-white py-3 rounded-lg font-bold hover:bg-orange-600 transition duration-300">
                         Crear Cuenta
                     </button>
                 </form>
 
+                <!-- Login Link -->
                 <div class="mt-6 text-center">
-                    <p class="text-sm text-slate-600">
+                    <p class="text-sm text-gray-600">
                         ¿Ya tienes cuenta?
-                        <a href="login.html" class="text-sport-accent font-semibold hover:underline">
+                        <a href="login.html" class="text-orange-500 font-semibold hover:text-orange-600">
                             Inicia sesión aquí
                         </a>
                     </p>
@@ -89,28 +102,29 @@
 
     <script>
         const API_URL = 'http://localhost:3000/api';
+        const registroForm = document.getElementById('registro-form');
+        const messageDiv = document.getElementById('message');
 
-        document.getElementById('registro-form').addEventListener('submit', async (e) => {
+        registroForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
             const nombre = document.getElementById('nombre').value;
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirm-password').value;
 
-            if (password !== confirmPassword) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Las contraseñas no coinciden'
-                });
+            // Clear previous message
+            messageDiv.classList.add('hidden');
+
+            // Validate password length
+            if (password.length < 6) {
+                messageDiv.className = 'p-3 rounded-lg text-sm bg-yellow-100 text-yellow-700 border border-yellow-300';
+                messageDiv.textContent = '⚠️ La contraseña debe tener al menos 6 caracteres';
+                messageDiv.classList.remove('hidden');
                 return;
             }
 
             try {
-                console.log('%c📝 Iniciando registro...', 'color: blue; font-weight: bold');
-
-                const response = await fetch(`${API_URL}/register`, {
+                const response = await fetch(`${API_URL}/auth/registro`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -120,41 +134,35 @@
 
                 const data = await response.json();
 
-                console.log('%c📨 Respuesta del servidor:', 'color: purple; font-weight: bold');
-                console.log('Data completa:', data);
+                if (response.ok) {
+                    // Save token and user data
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.usuario));
 
-                if (!response.ok) {
-                    console.error('%c❌ ERROR:', 'color: red; font-weight: bold', data.error);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error al registrar',
-                        text: data.error,
-                        footer: 'Status: ' + response.status
-                    });
-                    return;
+                    // Show success message
+                    messageDiv.className = 'p-3 rounded-lg text-sm bg-green-100 text-green-700 border border-green-300';
+                    messageDiv.textContent = '✅ Cuenta creada exitosamente! Redirigiendo...';
+                    messageDiv.classList.remove('hidden');
+
+                    // Redirect to store
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1500);
+                } else {
+                    // Show error message
+                    messageDiv.className = 'p-3 rounded-lg text-sm bg-red-100 text-red-700 border border-red-300';
+                    messageDiv.textContent = '❌ ' + (data.error || 'Error al crear la cuenta');
+                    messageDiv.classList.remove('hidden');
                 }
-
-                console.log('%c✅ USUARIO CREADO', 'color: green; font-weight: bold');
-
-                Swal.fire({
-                    icon: 'success',
-                    title: '¡Registro Exitoso!',
-                    html: `Bienvenido <b>${nombre}</b>.<br><br>Tu cuenta ha sido creada correctamente.`,
-                    confirmButtonText: 'Ir a Login'
-                }).then(() => {
-                    window.location.href = 'login.html';
-                });
-
-            } catch (err) {
-                console.error('%c💥 EXCEPCIÓN:', 'color: red; font-weight: bold', err);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error Inesperado',
-                    text: err.message
-                });
+            } catch (error) {
+                messageDiv.className = 'p-3 rounded-lg text-sm bg-red-100 text-red-700 border border-red-300';
+                messageDiv.textContent = '❌ Error de conexión. Verifica que el servidor esté corriendo.';
+                messageDiv.classList.remove('hidden');
+                console.error('Error:', error);
             }
         });
     </script>
+
 </body>
 
 </html>

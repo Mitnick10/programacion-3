@@ -6,97 +6,116 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión - FútbolStore</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'sport-blue': '#0f172a',
-                        'sport-accent': '#f97316',
-                    }
-                }
-            }
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        * {
+            font-family: 'Inter', sans-serif;
         }
-    </script>
+
+        .hero-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+    </style>
 </head>
 
-<body class="bg-gradient-to-br from-slate-100 to-slate-200 min-h-screen flex items-center justify-center p-4">
+<body class="bg-gray-50">
 
-    <div class="w-full max-w-md">
-        <div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
-            <div class="bg-gradient-to-r from-sport-blue to-slate-800 p-8 text-center">
-                <h1 class="text-3xl font-bold text-white mb-2">
-                    FÚTBOL<span class="text-sport-accent">STORE</span>
-                </h1>
-                <p class="text-slate-300 text-sm">Inicia sesión en tu cuenta</p>
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <a href="index.html" class="text-2xl font-bold text-gray-800">
+                    FÚTBOL<span class="text-orange-500">STORE</span>
+                </a>
+                <a href="index.html" class="text-sm text-gray-600 hover:text-orange-500 transition">
+                    ← Volver a la tienda
+                </a>
             </div>
+        </div>
+    </nav>
 
-            <div class="p-8">
+    <!-- Main Content -->
+    <div class="min-h-screen flex items-center justify-center py-12 px-4">
+        <div class="max-w-md w-full">
+
+            <!-- Card -->
+            <div class="bg-white rounded-lg shadow-xl p-8">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-2">Iniciar Sesión</h2>
+                    <p class="text-gray-600">Ingresa a tu cuenta</p>
+                </div>
+
+                <!-- Login Form -->
                 <form id="login-form" class="space-y-6">
+
+                    <!-- Email -->
                     <div>
-                        <label for="email" class="block text-sm font-semibold text-slate-700 mb-2">
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
                             Correo Electrónico
                         </label>
-                        <input type="email" id="email" required placeholder="tu@email.com"
-                            class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:border-sport-accent focus:ring-2 focus:ring-sport-accent focus:ring-opacity-20 outline-none transition">
+                        <input type="email" id="email" name="email" required
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition"
+                            placeholder="tu@email.com">
                     </div>
 
+                    <!-- Password -->
                     <div>
-                        <label for="password" class="block text-sm font-semibold text-slate-700 mb-2">
+                        <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
                             Contraseña
                         </label>
-                        <input type="password" id="password" required placeholder="Tu contraseña"
-                            class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:border-sport-accent focus:ring-2 focus:ring-sport-accent focus:ring-opacity-20 outline-none transition">
+                        <input type="password" id="password" name="password" required
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition"
+                            placeholder="••••••••">
                     </div>
 
-                    <div class="flex items-center justify-between">
-                        <label class="flex items-center">
-                            <input type="checkbox" id="remember"
-                                class="w-4 h-4 text-sport-accent border-slate-300 rounded focus:ring-sport-accent">
-                            <span class="ml-2 text-sm text-slate-600">Recordarme</span>
-                        </label>
-                        <a href="#" class="text-sm text-sport-accent hover:underline font-semibold">
-                            ¿Olvidaste tu contraseña?
-                        </a>
-                    </div>
+                    <!-- Message -->
+                    <div id="message" class="hidden p-3 rounded-lg text-sm"></div>
 
+                    <!-- Submit Button -->
                     <button type="submit"
-                        class="w-full bg-gradient-to-r from-sport-accent to-orange-600 text-white font-bold py-3 px-6 rounded-lg hover:from-orange-600 hover:to-sport-accent transform hover:scale-105 transition duration-200 shadow-lg">
+                        class="w-full bg-orange-500 text-white py-3 rounded-lg font-bold hover:bg-orange-600 transition duration-300">
                         Iniciar Sesión
                     </button>
                 </form>
 
+                <!-- Register Link -->
                 <div class="mt-6 text-center">
-                    <p class="text-sm text-slate-600">
+                    <p class="text-sm text-gray-600">
                         ¿No tienes cuenta?
-                        <a href="registro.html" class="text-sport-accent font-semibold hover:underline">
+                        <a href="registro.html" class="text-orange-500 font-semibold hover:text-orange-600">
                             Regístrate aquí
                         </a>
                     </p>
                 </div>
+            </div>
 
-                <div class="mt-4 text-center">
-                    <a href="index.html" class="text-sm text-slate-500 hover:text-sport-blue transition">
-                        ← Volver a la tienda
-                    </a>
-                </div>
+            <!-- Admin Info -->
+            <div class="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm">
+                <p class="text-blue-800 font-semibold mb-2">🔐 Credenciales de Prueba:</p>
+                <p class="text-blue-700"><strong>Admin:</strong> yonadavier@gmail.com</p>
+                <p class="text-blue-600 text-xs mt-1">(La contraseña la configuraste al crear el admin)</p>
             </div>
         </div>
     </div>
 
     <script>
         const API_URL = 'http://localhost:3000/api';
+        const loginForm = document.getElementById('login-form');
+        const messageDiv = document.getElementById('message');
 
-        document.getElementById('login-form').addEventListener('submit', async (e) => {
+        loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
-            try {
-                console.log('%c🔐 Iniciando sesión...', 'color: blue; font-weight: bold');
+            // Clear previous message
+            messageDiv.classList.add('hidden');
 
-                const response = await fetch(`${API_URL}/login`, {
+            try {
+                const response = await fetch(`${API_URL}/auth/login`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -106,58 +125,35 @@
 
                 const data = await response.json();
 
-                if (!response.ok) {
-                    alert('❌ Error al iniciar sesión: ' + data.error);
-                    console.error('Error:', data.error);
-                    return;
-                }
+                if (response.ok) {
+                    // Save token and user data
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.usuario));
 
-                const user = data.user;
-                console.log('✅ Sesión iniciada:', user.email);
-                console.log('👤 Rol:', user.role);
+                    // Show success message
+                    messageDiv.className = 'p-3 rounded-lg text-sm bg-green-100 text-green-700 border border-green-300';
+                    messageDiv.textContent = '✅ Login exitoso! Redirigiendo...';
+                    messageDiv.classList.remove('hidden');
 
-                // Guardar datos del usuario en localStorage
-                localStorage.setItem('user', JSON.stringify(user));
-
-                // Mostrar bienvenida
-                alert(`✅ ¡Bienvenido ${user.nombre}!\n\nEmail: ${user.email}\nRol: ${user.role}`);
-
-                // Redirigir según el rol
-                setTimeout(() => {
-                    if (user.role === 'admin') {
-                        window.location.href = 'admin.html';
-                    } else {
+                    // Redirect to store
+                    setTimeout(() => {
                         window.location.href = 'index.html';
-                    }
-                }, 1000);
-
-            } catch (err) {
-                alert('❌ Error inesperado: ' + err.message);
-                console.error('Error:', err);
+                    }, 1000);
+                } else {
+                    // Show error message
+                    messageDiv.className = 'p-3 rounded-lg text-sm bg-red-100 text-red-700 border border-red-300';
+                    messageDiv.textContent = '❌ ' + (data.error || 'Error al iniciar sesión');
+                    messageDiv.classList.remove('hidden');
+                }
+            } catch (error) {
+                messageDiv.className = 'p-3 rounded-lg text-sm bg-red-100 text-red-700 border border-red-300';
+                messageDiv.textContent = '❌ Error de conexión. Verifica que el servidor esté corriendo.';
+                messageDiv.classList.remove('hidden');
+                console.error('Error:', error);
             }
         });
-
-        // Verificar sesión existente
-        function checkExistingSession() {
-            const userStr = localStorage.getItem('user');
-            
-            if (userStr) {
-                try {
-                    const user = JSON.parse(userStr);
-                    const destino = user.role === 'admin' ? 'panel de administración' : 'tienda';
-
-                    if (confirm(`Ya tienes una sesión activa como ${user.role}.\n\n¿Quieres ir al ${destino}?`)) {
-                        window.location.href = user.role === 'admin' ? 'admin.html' : 'index.html';
-                    }
-                } catch (error) {
-                    console.error('Error al leer sesión:', error);
-                    localStorage.removeItem('user');
-                }
-            }
-        }
-
-        checkExistingSession();
     </script>
+
 </body>
 
 </html>

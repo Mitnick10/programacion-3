@@ -28,6 +28,10 @@ const productSchema = new mongoose.Schema({
         required: [true, 'La categoría es obligatoria'],
         enum: ['Futbol', 'Running', 'Gym', 'Basketball', 'Tennis', 'Natacion', 'Ciclismo', 'Otros'],
         default: 'Otros'
+    },
+    imagen_url: {
+        type: String,
+        default: 'https://via.placeholder.com/300x300?text=Producto+Deportivo'
     }
 }, {
     timestamps: true
