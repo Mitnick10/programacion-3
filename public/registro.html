@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - FútbolStore</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'sport-blue': '#0f172a',
+                        'sport-accent': '#f97316',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-gradient-to-br from-slate-100 to-slate-200 min-h-screen flex items-center justify-center p-4">
+
+    <div class="w-full max-w-md">
+        <div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
+            <div class="bg-gradient-to-r from-sport-blue to-slate-800 p-8 text-center">
+                <h1 class="text-3xl font-bold text-white mb-2">
+                    FÚTBOL<span class="text-sport-accent">STORE</span>
+                </h1>
+                <p class="text-slate-300 text-sm">Crea tu cuenta</p>
+            </div>
+
+            <div class="p-8">
+                <form id="registro-form" class="space-y-6">
+                    <div>
+                        <label for="nombre" class="block text-sm font-semibold text-slate-700 mb-2">
+                            Nombre Completo
+                        </label>
+                        <input type="text" id="nombre" required placeholder="Tu Nombre"
+                            class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:border-sport-accent focus:ring-2 focus:ring-sport-accent focus:ring-opacity-20 outline-none transition">
+                    </div>
+
+                    <div>
+                        <label for="email" class="block text-sm font-semibold text-slate-700 mb-2">
+                            Correo Electrónico
+                        </label>
+                        <input type="email" id="email" required placeholder="tu@email.com"
+                            class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:border-sport-accent focus:ring-2 focus:ring-sport-accent focus:ring-opacity-20 outline-none transition">
+                    </div>
+
+
+
+                    <div>
+                        <label for="password" class="block text-sm font-semibold text-slate-700 mb-2">
+                            Contraseña
+                        </label>
+                        <input type="password" id="password" required minlength="6" placeholder="Mínimo 6 caracteres"
+                            class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:border-sport-accent focus:ring-2 focus:ring-sport-accent focus:ring-opacity-20 outline-none transition">
+                    </div>
+
+                    <div>
+                        <label for="confirm-password" class="block text-sm font-semibold text-slate-700 mb-2">
+                            Confirmar Contraseña
+                        </label>
+                        <input type="password" id="confirm-password" required minlength="6"
+                            placeholder="Repite tu contraseña"
+                            class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:border-sport-accent focus:ring-2 focus:ring-sport-accent focus:ring-opacity-20 outline-none transition">
+                    </div>
+
+                    <button type="submit"
+                        class="w-full bg-gradient-to-r from-sport-accent to-orange-600 text-white font-bold py-3 px-6 rounded-lg hover:from-orange-600 hover:to-sport-accent transform hover:scale-105 transition duration-200 shadow-lg">
+                        Crear Cuenta
+                    </button>
+                </form>
+
+                <div class="mt-6 text-center">
+                    <p class="text-sm text-slate-600">
+                        ¿Ya tienes cuenta?
+                        <a href="login.html" class="text-sport-accent font-semibold hover:underline">
+                            Inicia sesión aquí
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:3000/api';
+
+        document.getElementById('registro-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const nombre = document.getElementById('nombre').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+
+            if (password !== confirmPassword) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Las contraseñas no coinciden'
+                });
+                return;
+            }
+
+            try {
+                console.log('%c📝 Iniciando registro...', 'color: blue; font-weight: bold');
+
+                const response = await fetch(`${API_URL}/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ nombre, email, password })
+                });
+
+                const data = await response.json();
+
+                console.log('%c📨 Respuesta del servidor:', 'color: purple; font-weight: bold');
+                console.log('Data completa:', data);
+
+                if (!response.ok) {
+                    console.error('%c❌ ERROR:', 'color: red; font-weight: bold', data.error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error al registrar',
+                        text: data.error,
+                        footer: 'Status: ' + response.status
+                    });
+                    return;
+                }
+
+                console.log('%c✅ USUARIO CREADO', 'color: green; font-weight: bold');
+
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Registro Exitoso!',
+                    html: `Bienvenido <b>${nombre}</b>.<br><br>Tu cuenta ha sido creada correctamente.`,
+                    confirmButtonText: 'Ir a Login'
+                }).then(() => {
+                    window.location.href = 'login.html';
+                });
+
+            } catch (err) {
+                console.error('%c💥 EXCEPCIÓN:', 'color: red; font-weight: bold', err);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error Inesperado',
+                    text: err.message
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
