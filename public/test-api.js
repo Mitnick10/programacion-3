@@ -1,5 +1,5 @@
 // Script de prueba para verificar la API de productos
-const API_URL = 'http://localhost:3000/api';
+const API_URL = '/api';
 
 async function testAPI() {
     console.log('🔍 Probando endpoint de productos...\n');
