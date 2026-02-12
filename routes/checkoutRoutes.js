@@ -3,7 +3,9 @@ const router = express.Router();
 const {
     procesarCheckout,
     obtenerHistorialOrdenes,
-    obtenerOrdenPorId
+    obtenerOrdenPorId,
+    obtenerTodasLasOrdenes,
+    actualizarEstadoOrden
 } = require('../controllers/checkoutController');
 const { verificarToken } = require('../middlewares/auth');
 
@@ -13,5 +15,9 @@ router.use(verificarToken);
 router.post('/', procesarCheckout);
 router.get('/ordenes', obtenerHistorialOrdenes);
 router.get('/ordenes/:ordenId', obtenerOrdenPorId);
+
+// Rutas Admin
+router.get('/admin/ordenes', obtenerTodasLasOrdenes);
+router.put('/admin/ordenes/:ordenId/estado', actualizarEstadoOrden);
 
 module.exports = router;

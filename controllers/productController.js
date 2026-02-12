@@ -3,36 +3,28 @@ const Product = require('../models/Product');
 // Crear producto (solo admin)
 const crearProducto = async (req, res) => {
     try {
-        console.log('⚡ Recibiendo solicitud de creación de producto');
         const { nombre, codigo, precio, descripcion, categoria, imagen_url } = req.body;
 
-        console.log(`📦 Datos recibidos: Nombre=${nombre}, Código=${codigo}, ImagenLength=${imagen_url ? imagen_url.length : 0}`);
-
-        // Validar campos obligatorios
+        // Validaciones básicas
         if (!nombre || !codigo || !precio || !descripcion || !categoria) {
-            return res.status(400).json({
-                error: 'Todos los campos son obligatorios'
-            });
+            return res.status(400).json({ error: 'Todos los campos son obligatorios.' });
         }
 
-        // Validar precio
         if (precio <= 0) {
-            return res.status(400).json({
-                error: 'El precio debe ser mayor a 0'
-            });
+            return res.status(400).json({ error: 'El precio debe ser mayor a 0.' });
         }
 
-        // Verificar si el código ya existe
-        const productoExistente = await Product.findOne({ codigo: codigo.toUpperCase() });
+        // Verificar duplicidad de código (case-insensitive)
+        const codigoUpper = codigo.toUpperCase();
+        const productoExistente = await Product.findOne({ codigo: codigoUpper });
+
         if (productoExistente) {
-            return res.status(400).json({
-                error: 'El código de producto ya está en uso'
-            });
+            return res.status(400).json({ error: 'El código de producto ya está en uso.' });
         }
 
         const nuevoProducto = new Product({
             nombre,
-            codigo: codigo.toUpperCase(),
+            codigo: codigoUpper,
             precio,
             descripcion,
             categoria,
@@ -42,54 +34,47 @@ const crearProducto = async (req, res) => {
         await nuevoProducto.save();
 
         res.status(201).json({
-            mensaje: 'Producto creado exitosamente',
+            mensaje: 'Producto creado exitosamente.',
             producto: nuevoProducto
         });
     } catch (error) {
-        res.status(500).json({
-            error: 'Error al crear producto',
-            detalle: error.message
-        });
+        console.error("Error creando producto:", error);
+        res.status(500).json({ error: 'Error interno al crear el producto.' });
     }
 };
 
-// Obtener todos los productos
+// Obtener todos los productos con filtrado opcional
 const obtenerProductos = async (req, res) => {
     try {
         const { categoria } = req.query;
+        // Construir query object dinámicamente
         const filtro = categoria ? { categoria } : {};
 
-        const productos = await Product.find(filtro);
+        const productos = await Product.find(filtro).lean(); // .lean() para optimización de lectura
 
         res.json({
             total: productos.length,
             productos
         });
     } catch (error) {
-        res.status(500).json({
-            error: 'Error al obtener productos',
-            detalle: error.message
-        });
+        console.error("Error obteniendo productos:", error);
+        res.status(500).json({ error: 'Error al obtener productos.' });
     }
 };
 
 // Obtener producto por ID
 const obtenerProductoPorId = async (req, res) => {
     try {
-        const producto = await Product.findById(req.params.id);
+        const producto = await Product.findById(req.params.id).lean();
 
         if (!producto) {
-            return res.status(404).json({
-                error: 'Producto no encontrado'
-            });
+            return res.status(404).json({ error: 'Producto no encontrado.' });
         }
 
         res.json({ producto });
     } catch (error) {
-        res.status(500).json({
-            error: 'Error al obtener producto',
-            detalle: error.message
-        });
+        console.error("Error obteniendo producto:", error);
+        res.status(500).json({ error: 'Error intero al obtener detalle del producto.' });
     }
 };
 
@@ -98,34 +83,32 @@ const actualizarProducto = async (req, res) => {
     try {
         const { nombre, codigo, precio, descripcion, categoria } = req.body;
 
-        // Validar precio si se proporciona
+        // Validaciones condicionales
         if (precio !== undefined && precio <= 0) {
-            return res.status(400).json({
-                error: 'El precio debe ser mayor a 0'
-            });
+            return res.status(400).json({ error: 'El precio debe ser mayor a 0.' });
         }
 
-        // Si se actualiza el código, verificar que no exista
+        // Verificar código único si se está actualizando
         if (codigo) {
-            const productoExistente = await Product.findOne({
-                codigo: codigo.toUpperCase(),
+            const codigoUpper = codigo.toUpperCase();
+            const duplicado = await Product.findOne({
+                codigo: codigoUpper,
                 _id: { $ne: req.params.id }
             });
 
-            if (productoExistente) {
-                return res.status(400).json({
-                    error: 'El código de producto ya está en uso'
-                });
+            if (duplicado) {
+                return res.status(400).json({ error: 'El código de producto ya está en uso.' });
             }
         }
 
-        const datosActualizados = {
-            ...(nombre && { nombre }),
-            ...(codigo && { codigo: codigo.toUpperCase() }),
-            ...(precio && { precio }),
-            ...(descripcion && { descripcion }),
-            ...(categoria && { categoria })
-        };
+        // Construir objeto de actualización solo con campos definidos
+        // DRY: Mongoose maneja esto bien, pero ser explícito ayuda a la seguridad
+        const datosActualizados = {};
+        if (nombre) datosActualizados.nombre = nombre;
+        if (codigo) datosActualizados.codigo = codigo.toUpperCase();
+        if (precio) datosActualizados.precio = precio;
+        if (descripcion) datosActualizados.descripcion = descripcion;
+        if (categoria) datosActualizados.categoria = categoria;
 
         const producto = await Product.findByIdAndUpdate(
             req.params.id,
@@ -134,20 +117,16 @@ const actualizarProducto = async (req, res) => {
         );
 
         if (!producto) {
-            return res.status(404).json({
-                error: 'Producto no encontrado'
-            });
+            return res.status(404).json({ error: 'Producto no encontrado.' });
         }
 
         res.json({
-            mensaje: 'Producto actualizado exitosamente',
+            mensaje: 'Producto actualizado exitosamente.',
             producto
         });
     } catch (error) {
-        res.status(500).json({
-            error: 'Error al actualizar producto',
-            detalle: error.message
-        });
+        console.error("Error actualizando producto:", error);
+        res.status(500).json({ error: 'Error al actualizar producto.' });
     }
 };
 
@@ -157,20 +136,16 @@ const eliminarProducto = async (req, res) => {
         const producto = await Product.findByIdAndDelete(req.params.id);
 
         if (!producto) {
-            return res.status(404).json({
-                error: 'Producto no encontrado'
-            });
+            return res.status(404).json({ error: 'Producto no encontrado.' });
         }
 
         res.json({
-            mensaje: 'Producto eliminado exitosamente',
+            mensaje: 'Producto eliminado exitosamente.',
             producto
         });
     } catch (error) {
-        res.status(500).json({
-            error: 'Error al eliminar producto',
-            detalle: error.message
-        });
+        console.error("Error eliminando producto:", error);
+        res.status(500).json({ error: 'Error al eliminar producto.' });
     }
 };
 

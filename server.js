@@ -115,6 +115,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/productos', productRoutes);
 app.use('/api/carrito', cartRoutes);
 app.use('/api/checkout', checkoutRoutes);
+app.use('/api/users', require('./routes/userRoutes'));
 
 
 // Middleware de manejo de errores 404

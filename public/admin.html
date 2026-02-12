@@ -48,224 +48,335 @@
         <!-- Alert Message -->
         <div id="alert-message" class="hidden mb-6 p-4 rounded-lg"></div>
 
-        <!-- Two Column Layout -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-
-            <!-- Create Product Section -->
-            <div class="lg:col-span-1">
-                <div class="bg-white rounded-lg shadow-md p-6 sticky top-4">
-                    <h2 class="text-xl font-bold text-gray-800 mb-6">Crear Nuevo Producto</h2>
-
-                    <form id="create-product-form" class="space-y-4">
-
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Nombre</label>
-                            <input type="text" id="nombre" required
-                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                                placeholder="Ej: Zapatillas Nike Air">
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Código</label>
-                            <input type="text" id="codigo" required
-                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent uppercase"
-                                placeholder="Ej: NK001">
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Precio ($)</label>
-                            <input type="number" id="precio" step="0.01" min="0.01" required
-                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                                placeholder="99.99">
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Categoría</label>
-                            <select id="categoria" required
-                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
-                                <option value="">Seleccionar...</option>
-                                <option value="Futbol">Fútbol</option>
-                                <option value="Running">Running</option>
-                                <option value="Gym">Gym</option>
-                                <option value="Basketball">Basketball</option>
-                                <option value="Tennis">Tennis</option>
-                                <option value="Natacion">Natación</option>
-                                <option value="Ciclismo">Ciclismo</option>
-                                <option value="Otros">Otros</option>
-                            </select>
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Descripción</label>
-                            <textarea id="descripcion" rows="3" required
-                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                                placeholder="Descripción del producto..."></textarea>
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Imagen del Producto</label>
-
-                            <input type="file" id="imagen_file" accept="image/*"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100">
-                            <p class="text-xs text-gray-500 mt-1">Formatos: JPG, PNG, GIF, WEBP. Máx: 5MB</p>
-
-                            <!-- Image Preview -->
-                            <div id="image-preview" class="hidden mt-3">
-                                <p class="text-xs text-gray-600 mb-2">Vista previa:</p>
-                                <img id="preview-img" class="w-32 h-32 object-cover rounded border" alt="Preview">
-                                <button type="button" onclick="clearImagePreview()"
-                                    class="text-xs text-red-500 hover:text-red-700 mt-2">
-                                    ✕ Eliminar
-                                </button>
-                            </div>
-                        </div>
-
-                        <button type="submit"
-                            class="w-full bg-orange-500 text-white py-3 rounded-lg font-bold hover:bg-orange-600 transition">
-                            ➕ Crear Producto
-                        </button>
-                    </form>
-                </div>
-            </div>
-
-            <!-- Products List Section -->
-            <div class="lg:col-span-2">
-                <div class="bg-white rounded-lg shadow-md p-6">
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-xl font-bold text-gray-800">Lista de Productos</h2>
-                        <button onclick="loadProducts()"
-                            class="text-sm bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded transition">
-                            🔄 Recargar
-                        </button>
-                    </div>
-
-                    <div id="products-count" class="text-sm text-gray-600 mb-4"></div>
-
-                    <!-- Products Table -->
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Producto
-                                    </th>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Código
-                                    </th>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Precio
-                                    </th>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                                        Categoría</th>
-                                    <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">
-                                        Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody id="products-table-body" class="bg-white divide-y divide-gray-200">
-                                <tr>
-                                    <td colspan="5" class="px-4 py-8 text-center text-gray-500">
-                                        Cargando productos...
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
+        <!-- Add Tabs -->
+        <div class="mb-6 border-b border-gray-200">
+            <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+                <button onclick="switchTab('productos')" id="btn-productos"
+                    class="tab-btn border-orange-500 text-orange-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                    📦 Productos
+                </button>
+                <button onclick="switchTab('usuarios')" id="btn-usuarios"
+                    class="tab-btn border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                    👥 Usuarios
+                </button>
+                <button onclick="switchTab('ventas')" id="btn-ventas"
+                    class="tab-btn border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                    💰 Ventas
+                </button>
+            </nav>
         </div>
-    </div>
 
-    <script>
-        const API_URL = 'http://localhost:3000/api';
-        let allProducts = [];
-        let uploadedImageUrl = null;
+        <!-- PRODUCTOS TAB -->
+        <div id="tab-productos" class="tab-content">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+                <!-- Create Product Section -->
+                <div class="lg:col-span-1">
+                    <div class="bg-white rounded-lg shadow-md p-6 sticky top-4">
+                        <h2 class="text-xl font-bold text-gray-800 mb-6">Crear Nuevo Producto</h2>
+
+                        <form id="create-product-form" class="space-y-4">
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Nombre</label>
+                                <input type="text" id="nombre" required
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                                    placeholder="Ej: Zapatillas Nike Air">
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Código</label>
+                                <input type="text" id="codigo" required
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent uppercase"
+                                    placeholder="Ej: NK001">
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Precio ($)</label>
+                                <input type="number" id="precio" step="0.01" min="0.01" required
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                                    placeholder="99.99">
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Categoría</label>
+                                <select id="categoria" required
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                    <option value="">Seleccionar...</option>
+                                    <option value="Futbol">Fútbol</option>
+                                    <option value="Running">Running</option>
+                                    <option value="Gym">Gym</option>
+                                    <option value="Basketball">Basketball</option>
+                                    <option value="Tennis">Tennis</option>
+                                    <option value="Natacion">Natación</option>
+                                    <option value="Ciclismo">Ciclismo</option>
+                                    <option value="Otros">Otros</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Género</label>
+                                <select id="genero" required
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                    <option value="Unisex">Unisex</option>
+                                    <option value="Hombre">Hombre</option>
+                                    <option value="Mujer">Mujer</option>
+                                    <option value="Niños">Niños</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Descripción</label>
+                                <textarea id="descripcion" rows="3" required
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                                    placeholder="Descripción del producto..."></textarea>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Imagen del Producto</label>
+
+                                <input type="file" id="imagen_file" accept="image/*"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100">
+                                <p class="text-xs text-gray-500 mt-1">Formatos: JPG, PNG, GIF, WEBP. Máx: 5MB</p>
+
+                                <!-- Image Preview -->
+                                <div id="image-preview" class="hidden mt-3">
+                                    <p class="text-xs text-gray-600 mb-2">Vista previa:</p>
+                                    <img id="preview-img" class="w-32 h-32 object-cover rounded border" alt="Preview">
+                                    <button type="button" onclick="clearImagePreview()"
+                                        class="text-xs text-red-500 hover:text-red-700 mt-2">
+                                        ✕ Eliminar
+                                    </button>
+                                </div>
+                            </div>
+
+                            <button type="submit"
+                                class="w-full bg-orange-500 text-white py-3 rounded-lg font-bold hover:bg-orange-600 transition">
+                                ➕ Crear Producto
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Products List Section -->
+                <div class="lg:col-span-2">
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="text-xl font-bold text-gray-800">Lista de Productos</h2>
+                            <button onclick="loadProducts()"
+                                class="text-sm bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded transition">
+                                🔄 Recargar
+                            </button>
+                        </div>
+
+                        <div id="products-count" class="text-sm text-gray-600 mb-4"></div>
+
+                        <!-- Products Table -->
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                            Producto
+                                        </th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                            Código
+                                        </th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                            Precio
+                                        </th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                            Categoría</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                            Género</th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">
+                                            Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="products-table-body" class="bg-white divide-y divide-gray-200">
+                                    <tr>
+                                        <td colspan="5" class="px-4 py-8 text-center text-gray-500">
+                                            Cargando productos...
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- USUARIOS TAB -->
+        <div id="tab-usuarios" class="tab-content hidden">
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-bold text-gray-800">Gestión de Usuarios</h2>
+                    <button onclick="loadUsers()"
+                        class="text-sm bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded transition">
+                        🔄 Recargar
+                    </button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Usuario</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Email</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Rol</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-table-body" class="bg-white divide-y divide-gray-200"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- VENTAS TAB -->
+        <div id="tab-ventas" class="tab-content hidden">
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-bold text-gray-800">Historial de Ventas</h2>
+                    <button onclick="loadOrders()"
+                        class="text-sm bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded transition">
+                        🔄 Recargar
+                    </button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    ID Orden</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Cliente</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Fecha</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Total</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Estado</th>
+                                <th
+                                    class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orders-table-body" class="bg-white divide-y divide-gray-200"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            const API_URL = 'http://localhost:3000/api';
+            let allProducts = [];
+            let allUsers = [];
+            let allOrders = [];
+            let uploadedImageUrl = null;
 
 
-        // Image preview functionality
-        document.getElementById('imagen_file').addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    document.getElementById('preview-img').src = event.target.result;
-                    document.getElementById('image-preview').classList.remove('hidden');
-                };
-                reader.readAsDataURL(file);
+            // Image preview functionality
+            document.getElementById('imagen_file').addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        document.getElementById('preview-img').src = event.target.result;
+                        document.getElementById('image-preview').classList.remove('hidden');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Clear image preview
+            function clearImagePreview() {
+                document.getElementById('imagen_file').value = '';
+                document.getElementById('image-preview').classList.add('hidden');
+                uploadedImageUrl = null;
             }
-        });
-
-        // Clear image preview
-        function clearImagePreview() {
-            document.getElementById('imagen_file').value = '';
-            document.getElementById('image-preview').classList.add('hidden');
-            uploadedImageUrl = null;
-        }
 
 
 
-        // Check if user is admin
-        function checkAdminAccess() {
-            const user = JSON.parse(localStorage.getItem('user') || '{}');
-            const token = localStorage.getItem('token');
+            // Check if user is admin
+            function checkAdminAccess() {
+                const user = JSON.parse(localStorage.getItem('user') || '{}');
+                const token = localStorage.getItem('token');
 
-            if (!user.email || !token) {
-                alert('Debes iniciar sesión para acceder al panel de administración');
-                window.location.href = 'login.html';
-                return;
+                if (!user.email || !token) {
+                    alert('Debes iniciar sesión para acceder al panel de administración');
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                if (user.nivel !== 'admin') {
+                    alert('⛔ Acceso denegado. Solo administradores pueden acceder a este panel.');
+                    window.location.href = 'index.html';
+                    return;
+                }
+
+                // Display admin name
+                document.getElementById('admin-name').textContent = user.nombre || user.email;
             }
 
-            if (user.nivel !== 'admin') {
-                alert('⛔ Acceso denegado. Solo administradores pueden acceder a este panel.');
-                window.location.href = 'index.html';
-                return;
+            // Show alert message
+            function showAlert(message, type = 'success') {
+                const alertDiv = document.getElementById('alert-message');
+                alertDiv.className = `mb-6 p-4 rounded-lg ${type === 'success' ? 'bg-green-100 text-green-700 border border-green-300' : 'bg-red-100 text-red-700 border border-red-300'}`;
+                alertDiv.textContent = message;
+                alertDiv.classList.remove('hidden');
+
+                setTimeout(() => {
+                    alertDiv.classList.add('hidden');
+                }, 5000);
             }
 
-            // Display admin name
-            document.getElementById('admin-name').textContent = user.nombre || user.email;
-        }
+            // Load all products
+            async function loadProducts() {
+                try {
+                    const response = await fetch(`${API_URL}/productos`);
+                    const data = await response.json();
+                    allProducts = data.productos || [];
 
-        // Show alert message
-        function showAlert(message, type = 'success') {
-            const alertDiv = document.getElementById('alert-message');
-            alertDiv.className = `mb-6 p-4 rounded-lg ${type === 'success' ? 'bg-green-100 text-green-700 border border-green-300' : 'bg-red-100 text-red-700 border border-red-300'}`;
-            alertDiv.textContent = message;
-            alertDiv.classList.remove('hidden');
+                    document.getElementById('products-count').textContent = `Total: ${allProducts.length} productos`;
 
-            setTimeout(() => {
-                alertDiv.classList.add('hidden');
-            }, 5000);
-        }
-
-        // Load all products
-        async function loadProducts() {
-            try {
-                const response = await fetch(`${API_URL}/productos`);
-                const data = await response.json();
-                allProducts = data.productos || [];
-
-                document.getElementById('products-count').textContent = `Total: ${allProducts.length} productos`;
-
-                renderProductsTable();
-            } catch (error) {
-                console.error('Error loading products:', error);
-                showAlert('Error cargando productos', 'error');
+                    renderProductsTable();
+                } catch (error) {
+                    console.error('Error loading products:', error);
+                    showAlert('Error cargando productos', 'error');
+                }
             }
-        }
 
-        // Render products table
-        function renderProductsTable() {
-            const tbody = document.getElementById('products-table-body');
+            // Render products table
+            function renderProductsTable() {
+                const tbody = document.getElementById('products-table-body');
 
-            if (allProducts.length === 0) {
-                tbody.innerHTML = `
+                if (allProducts.length === 0) {
+                    tbody.innerHTML = `
                     <tr>
                         <td colspan="5" class="px-4 py-8 text-center text-gray-500">
                             No hay productos disponibles
                         </td>
                     </tr>
                 `;
-                return;
-            }
+                    return;
+                }
 
-            tbody.innerHTML = allProducts.map(p => `
+                tbody.innerHTML = allProducts.map(p => `
                 <tr class="hover:bg-gray-50">
                     <td class="px-4 py-4">
                         <div class="flex items-center">
@@ -281,6 +392,9 @@
                     <td class="px-4 py-4 text-sm text-gray-700">${p.codigo}</td>
                     <td class="px-4 py-4 text-sm font-semibold text-gray-900">$${p.precio.toFixed(2)}</td>
                     <td class="px-4 py-4 text-sm text-gray-700">${p.categoria}</td>
+                    <td class="px-4 py-4 text-sm text-gray-700">
+                        <span class="px-2 py-1 bg-gray-100 rounded-full text-xs">${p.genero || 'Unisex'}</span>
+                    </td>
                     <td class="px-4 py-4 text-center">
                         <button onclick="deleteProduct('${p._id}', '${p.nombre.replace(/'/g, "\\'")}', '${p.codigo}')"
                             class="text-red-600 hover:text-red-800 font-medium text-sm">
@@ -289,124 +403,293 @@
                     </td>
                 </tr>
             `).join('');
-        }
+            }
 
-        // Create product
-        document.getElementById('create-product-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
+            // Create product
+            document.getElementById('create-product-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
 
-            const token = localStorage.getItem('token');
-            const productData = {
-                nombre: document.getElementById('nombre').value,
-                codigo: document.getElementById('codigo').value.toUpperCase(),
-                precio: parseFloat(document.getElementById('precio').value),
-                categoria: document.getElementById('categoria').value,
-                descripcion: document.getElementById('descripcion').value
-            };
+                const token = localStorage.getItem('token');
+                const productData = {
+                    nombre: document.getElementById('nombre').value,
+                    codigo: document.getElementById('codigo').value.toUpperCase(),
+                    precio: parseFloat(document.getElementById('precio').value),
+                    categoria: document.getElementById('categoria').value,
+                    genero: document.getElementById('genero').value,
+                    descripcion: document.getElementById('descripcion').value
+                };
 
-            const fileInput = document.getElementById('imagen_file');
+                const fileInput = document.getElementById('imagen_file');
 
-            if (fileInput.files.length > 0) {
-                console.log('📤 Procesando imagen...');
-                showAlert('⏳ Procesando imagen...', 'success');
+                if (fileInput.files.length > 0) {
+                    console.log('📤 Procesando imagen...');
+                    showAlert('⏳ Procesando imagen...', 'success');
+
+                    try {
+                        const file = fileInput.files[0];
+                        const reader = new FileReader();
+
+                        const base64String = await new Promise((resolve, reject) => {
+                            reader.onload = () => resolve(reader.result);
+                            reader.onerror = error => reject(error);
+                            reader.readAsDataURL(file);
+                        });
+
+                        if (base64String) {
+                            productData.imagen_url = base64String;
+                            console.log('✅ Imagen convertida a Base64');
+                            showAlert('✅ Imagen lista para guardar', 'success');
+                        }
+                    } catch (error) {
+                        console.error('❌ Error procesando imagen:', error);
+                        showAlert('❌ Error al procesar imagen', 'error');
+                        return;
+                    }
+                } else {
+                    console.warn('⚠️ No se seleccionó ningún archivo');
+                    const continuar = confirm('⚠️ No seleccionaste una imagen.\n\n¿Crear producto sin imagen?\n\n(Se mostrará un icono 📦 por defecto)');
+                    if (!continuar) {
+                        showAlert('⚠️ Selecciona una imagen primero', 'error');
+                        return;
+                    }
+                }
+
+                console.log('📦 Datos finales del producto:', productData);
 
                 try {
-                    const file = fileInput.files[0];
-                    const reader = new FileReader();
-
-                    const base64String = await new Promise((resolve, reject) => {
-                        reader.onload = () => resolve(reader.result);
-                        reader.onerror = error => reject(error);
-                        reader.readAsDataURL(file);
+                    const response = await fetch(`${API_URL}/productos`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify(productData)
                     });
 
-                    if (base64String) {
-                        productData.imagen_url = base64String;
-                        console.log('✅ Imagen convertida a Base64');
-                        showAlert('✅ Imagen lista para guardar', 'success');
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        showAlert(`✅ Producto "${data.producto.nombre}" creado exitosamente`, 'success');
+                        document.getElementById('create-product-form').reset();
+                        clearImagePreview();
+                        loadProducts();
+                    } else {
+                        showAlert(`❌ ${data.error || 'Error al crear producto'}`, 'error');
                     }
                 } catch (error) {
-                    console.error('❌ Error procesando imagen:', error);
-                    showAlert('❌ Error al procesar imagen', 'error');
+                    console.error('Error:', error);
+                    showAlert('❌ Error de conexión', 'error');
+                }
+            });
+
+            // Delete product
+            async function deleteProduct(id, nombre, codigo) {
+                if (!confirm(`¿Estás seguro de eliminar "${nombre}" (${codigo})?`)) {
                     return;
                 }
-            } else {
-                console.warn('⚠️ No se seleccionó ningún archivo');
-                const continuar = confirm('⚠️ No seleccionaste una imagen.\n\n¿Crear producto sin imagen?\n\n(Se mostrará un icono 📦 por defecto)');
-                if (!continuar) {
-                    showAlert('⚠️ Selecciona una imagen primero', 'error');
-                    return;
-                }
-            }
 
-            console.log('📦 Datos finales del producto:', productData);
+                const token = localStorage.getItem('token');
 
-            try {
-                const response = await fetch(`${API_URL}/productos`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: JSON.stringify(productData)
-                });
+                try {
+                    const response = await fetch(`${API_URL}/productos/${id}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
 
-                const data = await response.json();
-
-                if (response.ok) {
-                    showAlert(`✅ Producto "${data.producto.nombre}" creado exitosamente`, 'success');
-                    document.getElementById('create-product-form').reset();
-                    clearImagePreview();
-                    loadProducts();
-                } else {
-                    showAlert(`❌ ${data.error || 'Error al crear producto'}`, 'error');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                showAlert('❌ Error de conexión', 'error');
-            }
-        });
-
-        // Delete product
-        async function deleteProduct(id, nombre, codigo) {
-            if (!confirm(`¿Estás seguro de eliminar "${nombre}" (${codigo})?`)) {
-                return;
-            }
-
-            const token = localStorage.getItem('token');
-
-            try {
-                const response = await fetch(`${API_URL}/productos/${id}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Authorization': `Bearer ${token}`
+                    if (response.ok) {
+                        showAlert(`✅ Producto "${nombre}" eliminado exitosamente`, 'success');
+                        loadProducts();
+                    } else {
+                        const data = await response.json();
+                        showAlert(`❌ ${data.error || 'Error al eliminar producto'}`, 'error');
                     }
-                });
-
-                if (response.ok) {
-                    showAlert(`✅ Producto "${nombre}" eliminado exitosamente`, 'success');
-                    loadProducts();
-                } else {
-                    const data = await response.json();
-                    showAlert(`❌ ${data.error || 'Error al eliminar producto'}`, 'error');
+                } catch (error) {
+                    console.error('Error:', error);
+                    showAlert('❌ Error de conexión', 'error');
                 }
-            } catch (error) {
-                console.error('Error:', error);
-                showAlert('❌ Error de conexión', 'error');
             }
-        }
 
-        // Logout
-        function logout() {
-            localStorage.removeItem('user');
-            localStorage.removeItem('token');
-            window.location.href = 'login.html';
-        }
+            // --- TABS LOGIC ---
+            function switchTab(tabId) {
+                // Hide all contents
+                document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+                // Show selected
+                document.getElementById(`tab-${tabId}`).classList.remove('hidden');
 
-        // Initialize
-        checkAdminAccess();
-        loadProducts();
-    </script>
+                // Update buttons
+                document.querySelectorAll('.tab-btn').forEach(btn => {
+                    btn.classList.remove('border-orange-500', 'text-orange-600');
+                    btn.classList.add('border-transparent', 'text-gray-500');
+                });
+                const activeBtn = document.getElementById(`btn-${tabId}`);
+                activeBtn.classList.remove('border-transparent', 'text-gray-500');
+                activeBtn.classList.add('border-orange-500', 'text-orange-600');
+
+                // Load data if needed
+                if (tabId === 'usuarios') loadUsers();
+                if (tabId === 'ventas') loadOrders();
+            }
+
+            // --- USERS LOGIC ---
+            async function loadUsers() {
+                try {
+                    const token = localStorage.getItem('token');
+                    const response = await fetch(`${API_URL}/users`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    const data = await response.json();
+                    allUsers = data.usuarios || [];
+                    renderUsersTable();
+                } catch (error) {
+                    console.error(error);
+                    showAlert('Error cargando usuarios', 'error');
+                }
+            }
+
+            function renderUsersTable() {
+                const tbody = document.getElementById('users-table-body');
+                tbody.innerHTML = allUsers.map(u => `
+                <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm font-medium text-gray-900">${u.nombre}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-500">${u.email}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${u.nivel === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-green-100 text-green-800'}">
+                            ${u.nivel}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <button onclick="changeRole('${u._id}', '${u.nivel}')" class="text-indigo-600 hover:text-indigo-900 mr-4">Cambiar Rol</button>
+                        <button onclick="deleteUser('${u._id}')" class="text-red-600 hover:text-red-900">Eliminar</button>
+                    </td>
+                </tr>
+            `).join('');
+            }
+
+            async function deleteUser(id) {
+                if (!confirm('¿Eliminar este usuario?')) return;
+                const token = localStorage.getItem('token');
+                try {
+                    const response = await fetch(`${API_URL}/users/${id}`, {
+                        method: 'DELETE',
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    if (response.ok) {
+                        showAlert('Usuario eliminado', 'success');
+                        loadUsers();
+                    } else {
+                        showAlert('Error al eliminar', 'error');
+                    }
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+
+            async function changeRole(id, currentRole) {
+                const newRole = currentRole === 'admin' ? 'usuario' : 'admin';
+                if (!confirm(`¿Cambiar rol a ${newRole}?`)) return;
+                const token = localStorage.getItem('token');
+                try {
+                    const response = await fetch(`${API_URL}/users/${id}/rol`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({ nivel: newRole })
+                    });
+                    if (response.ok) {
+                        showAlert('Rol actualizado', 'success');
+                        loadUsers();
+                    }
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+
+            // --- ORDERS LOGIC ---
+            async function loadOrders() {
+                try {
+                    const token = localStorage.getItem('token');
+                    const response = await fetch(`${API_URL}/checkout/admin/ordenes`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    const data = await response.json();
+                    allOrders = data.ordenes || [];
+                    renderOrdersTable();
+                } catch (error) {
+                    console.error(error);
+                    showAlert('Error cargando ventas', 'error');
+                }
+            }
+
+            function renderOrdersTable() {
+                const tbody = document.getElementById('orders-table-body');
+                tbody.innerHTML = allOrders.map(o => `
+                <tr>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${o._id}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm font-medium text-gray-900">${o.usuario ? o.usuario.nombre : 'Usuario eliminado'}</div>
+                        <div class="text-xs text-gray-500">${o.usuario ? o.usuario.email : ''}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        ${new Date(o.createdAt).toLocaleDateString()}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">
+                        $${o.total.toFixed(2)}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <select onchange="updateOrderStatus('${o._id}', this.value)" class="text-sm border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                            <option value="pendiente" ${o.estado === 'pendiente' ? 'selected' : ''}>Pendiente</option>
+                            <option value="procesando" ${o.estado === 'procesando' ? 'selected' : ''}>Procesando</option>
+                            <option value="completado" ${o.estado === 'completado' ? 'selected' : ''}>Completado</option>
+                            <option value="cancelado" ${o.estado === 'cancelado' ? 'selected' : ''}>Cancelado</option>
+                        </select>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-center">
+                        <button class="text-gray-400 hover:text-gray-600">👁️ Ver</button>
+                    </td>
+                </tr>
+            `).join('');
+            }
+
+            async function updateOrderStatus(id, newStatus) {
+                const token = localStorage.getItem('token');
+                try {
+                    const response = await fetch(`${API_URL}/checkout/admin/ordenes/${id}/estado`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({ estado: newStatus })
+                    });
+                    if (response.ok) {
+                        showAlert('Estado actualizado', 'success');
+                    } else {
+                        showAlert('Error al actualizar', 'error');
+                    }
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+
+            // Logout
+            function logout() {
+                localStorage.removeItem('user');
+                localStorage.removeItem('token');
+                window.location.href = 'login.html';
+            }
+
+            // Initialize
+            checkAdminAccess();
+            loadProducts();
+        </script>
 
 </body>
 
