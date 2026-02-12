@@ -75,10 +75,14 @@
 
                 <!-- Menu Desktop -->
                 <div class="hidden md:flex space-x-8 text-sm font-medium">
-                    <a href="#" class="hover:text-accent transition">INICIO</a>
-                    <a href="#" class="hover:text-accent transition">HOMBRE</a>
-                    <a href="#" class="hover:text-accent transition">MUJER</a>
-                    <a href="#" class="hover:text-accent transition">NIÑOS</a>
+                    <a href="#" onclick="filterProducts('todos'); return false;"
+                        class="hover:text-accent transition">INICIO</a>
+                    <a href="#" onclick="filterProducts('Hombre'); return false;"
+                        class="hover:text-accent transition">HOMBRE</a>
+                    <a href="#" onclick="filterProducts('Mujer'); return false;"
+                        class="hover:text-accent transition">MUJER</a>
+                    <a href="#" onclick="filterProducts('Niños'); return false;"
+                        class="hover:text-accent transition">NIÑOS</a>
                     <a href="#ofertas" class="text-red-500 font-bold hover:text-red-600 transition">OFERTAS</a>
                 </div>
 
@@ -350,6 +354,19 @@
             renderProducts(productos);
 
             console.log('✅ Aplicación inicializada');
+        }
+
+        // Filter Function
+        function filterProducts(gender) {
+            console.log(`🔍 Filtrando por género: ${gender}`);
+            const filtered = gender === 'todos'
+                ? allProducts
+                : allProducts.filter(p => p.genero === gender || p.genero === 'Unisex');
+
+            renderProducts(filtered);
+
+            const title = document.querySelector('.section-title');
+            title.textContent = gender === 'todos' ? 'TODOS LOS PRODUCTOS' : `PRODUCTOS: ${gender.toUpperCase()}`;
         }
 
         // Auth Functions

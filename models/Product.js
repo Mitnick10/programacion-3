@@ -29,6 +29,11 @@ const productSchema = new mongoose.Schema({
         enum: ['Futbol', 'Running', 'Gym', 'Basketball', 'Tennis', 'Natacion', 'Ciclismo', 'Otros'],
         default: 'Otros'
     },
+    genero: {
+        type: String,
+        enum: ['Hombre', 'Mujer', 'Unisex', 'Niños'],
+        default: 'Unisex'
+    },
     imagen_url: {
         type: String,
         default: 'https://via.placeholder.com/300x300?text=Producto+Deportivo'
